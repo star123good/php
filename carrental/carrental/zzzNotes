@@ -1,0 +1,37 @@
+-----------------------------------
+chk font awesome in all head
+-----------------------------------
+
+debug sql statement
+Put this below execute statement:
+$error= $query->errorInfo();
+echo $error[2];
+echo "<br>extend:";
+var_dump($error);
+and run it again and look if there is an issue stated
+
+  
+ 
+daconfirmebulis daqabceeba amovigot
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+ 
