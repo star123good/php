@@ -1,0 +1,2 @@
+<li><a href="[@url]register"> <span style="color: #FFD500;"><i class="fa fa-user-plus"></i> [#lang_create_account] </span></a></li>
+<li><a href="[@url]login"><span style="color: #00FF40;"><i class="fa fa-sign-in"></i> [#lang_login] </span></a></li>
