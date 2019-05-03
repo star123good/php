@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container-fluid">
+        <div style="width:80%; margin:20px auto;">
+            <h1 class="act">Åpne Data - Enhetsregisteret</h1>
+
+            <div style="width:70%; margin:0 auto;">
+                <div class="input-group mb-3" style="margin-top:25px">
+                <p style="margin: 0;line-height: 32px;padding-right: 10px;">Navn eller organisasjonsnummer :</p>
+                    <input type="text" class="form-control" placeholder="Navn eller organisasjonsnummer" id="search_txt" name="search_txt" aria-label="Navn eller organisasjonsnummer" aria-describedby="Navn eller organisasjonsnummer">
+                </div>
+
+                <div>
+                Kommune : <span class="autocomplete-select"></span>
+                </div>
+                <div class="text-center" style="margin-top:20px;">
+                    <a class="btn btn-outline-success btn-lg btn-block" href="javascript:search();" id="search_btn">Søk</a>
+                </div>
+            </div>
+
+            <div class="progress" style="margin-top:30px;">
+            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+
+            <div class="excel-form text-center" style="margin-top:25px">
+                <a href="ait_excel?cate=item" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">nedlasting(Elementer)</a>
+                <a href="ait_excel?cate=item_category" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">nedlasting(Kategori)</a>
+                <a href="ait_excel?cate=item_location" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">nedlasting(plassering)</a>
+            </div>
+        </div>
+    </div>
+    <div class="loading">
+      <img src="img/ajax-loader.gif"/>
+    </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/multi-select.js"></script>
+<script>
+  var searchTxt = '';
+  var lcode = '';
+  function search()
+  {
+    $('.excel-form').removeClass('active');
+    $('.loading').addClass('active');
+    var url = "https://data.brreg.no/enhetsregisteret/api/enheter/?size=20";
+    searchTxt = $('#search_txt').val();
+    $.ajax({
+        url: 'ait_insert.php',
+        method:'POST',
+        data: { page: 0, search: searchTxt, kommunenummer: lcode},
+        dataType:'json',
+        cache: false,
+        async:true,
+    }).done(function( data ) {
+        var totalPage = data.totalpages;
+        get_pageData(1, totalPage);
+    }).fail(function() {
+        console.log( "network error" );
+        $('.loading').removeClass('active');
+    });
+  }
+  function get_pageData(page,totalPage)
+  {
+    if (page<=totalPage && totalPage>0)
+    {
+        $.ajax({
+            url: "ait_insert.php",
+            method:'POST',
+            data: { page: page, search: searchTxt, kommunenummer: lcode},
+            dataType:'json',
+            cache: false,
+            async:true
+        }).done(function( data ) {
+            var percent = Math.round((page*100)/totalPage);
+            if (percent>100) percent = 100;
+            $('.progress-bar').css('width', percent+'%');
+            $('.progress-bar').html(percent+'%');
+            page++;
+            get_pageData(page, totalPage);
+        }).fail(function() {
+            get_pageData(page, totalPage);
+            //$('.loading').removeClass('active');
+        });
+    }
+    else {
+        $('.excel-form').addClass('active');
+        $('.loading').removeClass('active');
+    }
+  }
+  var autocomplete = new SelectPure(".autocomplete-select", {
+        options: [
+            {value:"0101", label: "0101 - Halden"},
+            {value:"0104", label: "0104 - Moss"},
+            {value:"0105", label: "0105 - Sarpsborg"},
+            {value:"0106", label: "0106 - Fredrikstad"},
+            {value:"0111", label: "0111 - Hvaler"},
+            {value:"0118", label: "0118 - Aremark"},
+            {value:"0119", label: "0119 - Marker"},
+            {value:"0121", label: "0121 - Rømskog"},
+            {value:"0122", label: "0122 - Trøgstad"},
+            {value:"0123", label: "0123 - Spydeberg"},
+            {value:"0124", label: "0124 - Askim"},
+            {value:"0125", label: "0125 - Eidsberg"},
+            {value:"0127", label: "0127 - Skiptvet"},
+            {value:"0128", label: "0128 - Rakkestad"},
+            {value:"0135", label: "0135 - Råde"},
+            {value:"0136", label: "0136 - Rygge"},
+            {value:"0137", label: "0137 - Våler"},
+            {value:"0138", label: "0138 - Hobøl"},
+            {value:"0211", label: "0211 - Vestby"},
+            {value:"0213", label: "0213 - Ski"},
+            {value:"0214", label: "0214 - Ås"},
+            {value:"0215", label: "0215 - Frogn"},
+            {value:"0216", label: "0216 - Nesodden"},
+            {value:"0217", label: "0217 - Oppegård"},
+            {value:"0219", label: "0219 - Bærum"},
+            {value:"0220", label: "0220 - Asker"},
+            {value:"0221", label: "0221 - Aurskog-Høland"},
+            {value:"0226", label: "0226 - Sørum"},
+            {value:"0227", label: "0227 - Fet"},
+            {value:"0228", label: "0228 - Rælingen"},
+            {value:"0229", label: "0229 - Enebakk"},
+            {value:"0230", label: "0230 - Lørenskog"},
+            {value:"0231", label: "0231 - Skedsmo"},
+            {value:"0233", label: "0233 - Nittedal"},
+            {value:"0234", label: "0234 - Gjerdrum"},
+            {value:"0235", label: "0235 - Ullensaker"},
+            {value:"0236", label: "0236 - Nes"},
+            {value:"0237", label: "0237 - Eidsvoll"},
+            {value:"0238", label: "0238 - Nannestad"},
+            {value:"0239", label: "0239 - Hurdal"},
+            {value:"0301", label: "0301 - Oslo"},
+            {value:"0402", label: "0402 - Kongsvinger"},
+            {value:"0403", label: "0403 - Hamar"},
+            {value:"0412", label: "0412 - Ringsaker"},
+            {value:"0415", label: "0415 - Løten"},
+            {value:"0417", label: "0417 - Stange"},
+            {value:"0418", label: "0418 - Nord-Odal"},
+            {value:"0419", label: "0419 - Sør-Odal"},
+            {value:"0420", label: "0420 - Eidskog"},
+            {value:"0423", label: "0423 - Grue"},
+            {value:"0425", label: "0425 - Åsnes"},
+            {value:"0426", label: "0426 - Våler"},
+            {value:"0427", label: "0427 - Elverum"},
+            {value:"0428", label: "0428 - Trysil"},
+            {value:"0429", label: "0429 - Åmot"},
+            {value:"0430", label: "0430 - Stor-Elvdal"},
+            {value:"0432", label: "0432 - Rendalen"},
+            {value:"0434", label: "0434 - Engerdal"},
+            {value:"0436", label: "0436 - Tolga"},
+            {value:"0437", label: "0437 - Tynset"},
+            {value:"0438", label: "0438 - Alvdal"},
+            {value:"0439", label: "0439 - Folldal"},
+            {value:"0441", label: "0441 - Os"},
+            {value:"0501", label: "0501 - Lillehammer"},
+            {value:"0502", label: "0502 - Gjøvik"},
+            {value:"0511", label: "0511 - Dovre"},
+            {value:"0512", label: "0512 - Lesja"},
+            {value:"0513", label: "0513 - Skjåk"},
+            {value:"0514", label: "0514 - Lom"},
+            {value:"0515", label: "0515 - Vågå"},
+            {value:"0516", label: "0516 - Nord-Fron"},
+            {value:"0517", label: "0517 - Sel"},
+            {value:"0519", label: "0519 - Sør-Fron"},
+            {value:"0520", label: "0520 - Ringebu"},
+            {value:"0521", label: "0521 - Øyer"},
+            {value:"0522", label: "0522 - Gausdal"},
+            {value:"0528", label: "0528 - Østre Toten"},
+            {value:"0529", label: "0529 - Vestre Toten"},
+            {value:"0532", label: "0532 - Jevnaker"},
+            {value:"0533", label: "0533 - Lunner"},
+            {value:"0534", label: "0534 - Gran"},
+            {value:"0536", label: "0536 - Søndre Land"},
+            {value:"0538", label: "0538 - Nordre Land"},
+            {value:"0540", label: "0540 - Sør-Aurdal"},
+            {value:"0541", label: "0541 - Etnedal"},
+            {value:"0542", label: "0542 - Nord-Aurdal"},
+            {value:"0543", label: "0543 - Vestre Slidre"},
+            {value:"0544", label: "0544 - Øystre Slidre"},
+            {value:"0545", label: "0545 - Vang"},
+            {value:"0602", label: "0602 - Drammen"},
+            {value:"0604", label: "0604 - Kongsberg"},
+            {value:"0605", label: "0605 - Ringerike"},
+            {value:"0612", label: "0612 - Hole"},
+            {value:"0615", label: "0615 - Flå"},
+            {value:"0616", label: "0616 - Nes"},
+            {value:"0617", label: "0617 - Gol"},
+            {value:"0618", label: "0618 - Hemsedal"},
+            {value:"0619", label: "0619 - Ål"},
+            {value:"0620", label: "0620 - Hol"},
+            {value:"0621", label: "0621 - Sigdal"},
+            {value:"0622", label: "0622 - Krødsherad"},
+            {value:"0623", label: "0623 - Modum"},
+            {value:"0624", label: "0624 - Øvre Eiker"},
+            {value:"0625", label: "0625 - Nedre Eiker"},
+            {value:"0626", label: "0626 - Lier"},
+            {value:"0627", label: "0627 - Røyken"},
+            {value:"0628", label: "0628 - Hurum"},
+            {value:"0631", label: "0631 - Flesberg"},
+            {value:"0632", label: "0632 - Rollag"},
+            {value:"0633", label: "0633 - Nore og Uvdal"},
+            {value:"0701", label: "0701 - Horten"},
+            {value:"0704", label: "0704 - Tønsberg"},
+            {value:"0710", label: "0710 - Sandefjord"},
+            {value:"0711", label: "0711 - Svelvik"},
+            {value:"0712", label: "0712 - Larvik"},
+            {value:"0713", label: "0713 - Sande"},
+            {value:"0715", label: "0715 - Holmestrand"},
+            {value:"0716", label: "0716 - Re"},
+            {value:"0729", label: "0729 - Færder"},
+            {value:"0805", label: "0805 - Porsgrunn"},
+            {value:"0806", label: "0806 - Skien"},
+            {value:"0807", label: "0807 - Notodden"},
+            {value:"0811", label: "0811 - Siljan"},
+            {value:"0814", label: "0814 - Bamble"},
+            {value:"0815", label: "0815 - Kragerø"},
+            {value:"0817", label: "0817 - Drangedal"},
+            {value:"0819", label: "0819 - Nome"},
+            {value:"0821", label: "0821 - Bø"},
+            {value:"0822", label: "0822 - Sauherad"},
+            {value:"0826", label: "0826 - Tinn"},
+            {value:"0827", label: "0827 - Hjartdal"},
+            {value:"0828", label: "0828 - Seljord"},
+            {value:"0829", label: "0829 - Kviteseid"},
+            {value:"0830", label: "0830 - Nissedal"},
+            {value:"0831", label: "0831 - Fyresdal"},
+            {value:"0833", label: "0833 - Tokke"},
+            {value:"0834", label: "0834 - Vinje"},
+            {value:"0901", label: "0901 - Risør"},
+            {value:"0904", label: "0904 - Grimstad"},
+            {value:"0906", label: "0906 - Arendal"},
+            {value:"0911", label: "0911 - Gjerstad"},
+            {value:"0912", label: "0912 - Vegårshei"},
+            {value:"0914", label: "0914 - Tvedestrand"},
+            {value:"0919", label: "0919 - Froland"},
+            {value:"0926", label: "0926 - Lillesand"},
+            {value:"0928", label: "0928 - Birkenes"},
+            {value:"0929", label: "0929 - Åmli"},
+            {value:"0935", label: "0935 - Iveland"},
+            {value:"0937", label: "0937 - Evje og Hornnes"},
+            {value:"0938", label: "0938 - Bygland"},
+            {value:"0940", label: "0940 - Valle"},
+            {value:"0941", label: "0941 - Bykle"},
+            {value:"1001", label: "1001 - Kristiansand"},
+            {value:"1002", label: "1002 - Mandal"},
+            {value:"1003", label: "1003 - Farsund"},
+            {value:"1004", label: "1004 - Flekkefjord"},
+            {value:"1014", label: "1014 - Vennesla"},
+            {value:"1017", label: "1017 - Songdalen"},
+            {value:"1018", label: "1018 - Søgne"},
+            {value:"1021", label: "1021 - Marnardal"},
+            {value:"1026", label: "1026 - Åseral"},
+            {value:"1027", label: "1027 - Audnedal"},
+            {value:"1029", label: "1029 - Lindesnes"},
+            {value:"1032", label: "1032 - Lyngdal"},
+            {value:"1034", label: "1034 - Hægebostad"},
+            {value:"1037", label: "1037 - Kvinesdal"},
+            {value:"1046", label: "1046 - Sirdal"},
+            {value:"1101", label: "1101 - Eigersund"},
+            {value:"1102", label: "1102 - Sandnes"},
+            {value:"1103", label: "1103 - Stavanger"},
+            {value:"1106", label: "1106 - Haugesund"},
+            {value:"1111", label: "1111 - Sokndal"},
+            {value:"1112", label: "1112 - Lund"},
+            {value:"1114", label: "1114 - Bjerkreim"},
+            {value:"1119", label: "1119 - Hå"},
+            {value:"1120", label: "1120 - Klepp"},
+            {value:"1121", label: "1121 - Time"},
+            {value:"1122", label: "1122 - Gjesdal"},
+            {value:"1124", label: "1124 - Sola"},
+            {value:"1127", label: "1127 - Randaberg"},
+            {value:"1129", label: "1129 - Forsand"},
+            {value:"1130", label: "1130 - Strand"},
+            {value:"1133", label: "1133 - Hjelmeland"},
+            {value:"1134", label: "1134 - Suldal"},
+            {value:"1135", label: "1135 - Sauda"},
+            {value:"1141", label: "1141 - Finnøy"},
+            {value:"1142", label: "1142 - Rennesøy"},
+            {value:"1144", label: "1144 - Kvitsøy"},
+            {value:"1145", label: "1145 - Bokn"},
+            {value:"1146", label: "1146 - Tysvær"},
+            {value:"1149", label: "1149 - Karmøy"},
+            {value:"1151", label: "1151 - Utsira"},
+            {value:"1160", label: "1160 - Vindafjord"},
+            {value:"1201", label: "1201 - Bergen"},
+            {value:"1211", label: "1211 - Etne"},
+            {value:"1216", label: "1216 - Sveio"},
+            {value:"1219", label: "1219 - Bømlo"},
+            {value:"1221", label: "1221 - Stord"},
+            {value:"1222", label: "1222 - Fitjar"},
+            {value:"1223", label: "1223 - Tysnes"},
+            {value:"1224", label: "1224 - Kvinnherad"},
+            {value:"1227", label: "1227 - Jondal"},
+            {value:"1228", label: "1228 - Odda"},
+            {value:"1231", label: "1231 - Ullensvang"},
+            {value:"1232", label: "1232 - Eidfjord"},
+            {value:"1233", label: "1233 - Ulvik"},
+            {value:"1234", label: "1234 - Granvin"},
+            {value:"1235", label: "1235 - Voss"},
+            {value:"1238", label: "1238 - Kvam"},
+            {value:"1241", label: "1241 - Fusa"},
+            {value:"1242", label: "1242 - Samnanger"},
+            {value:"1243", label: "1243 - Os"},
+            {value:"1244", label: "1244 - Austevoll"},
+            {value:"1245", label: "1245 - Sund"},
+            {value:"1246", label: "1246 - Fjell"},
+            {value:"1247", label: "1247 - Askøy"},
+            {value:"1251", label: "1251 - Vaksdal"},
+            {value:"1252", label: "1252 - Modalen"},
+            {value:"1253", label: "1253 - Osterøy"},
+            {value:"1256", label: "1256 - Meland"},
+            {value:"1259", label: "1259 - Øygarden"},
+            {value:"1260", label: "1260 - Radøy"},
+            {value:"1263", label: "1263 - Lindås"},
+            {value:"1264", label: "1264 - Austrheim"},
+            {value:"1265", label: "1265 - Fedje"},
+            {value:"1266", label: "1266 - Masfjorden"},
+            {value:"1401", label: "1401 - Flora"},
+            {value:"1411", label: "1411 - Gulen"},
+            {value:"1412", label: "1412 - Solund"},
+            {value:"1413", label: "1413 - Hyllestad"},
+            {value:"1416", label: "1416 - Høyanger"},
+            {value:"1417", label: "1417 - Vik"},
+            {value:"1418", label: "1418 - Balestrand"},
+            {value:"1419", label: "1419 - Leikanger"},
+            {value:"1420", label: "1420 - Sogndal"},
+            {value:"1421", label: "1421 - Aurland"},
+            {value:"1422", label: "1422 - Lærdal"},
+            {value:"1424", label: "1424 - Årdal"},
+            {value:"1426", label: "1426 - Luster"},
+            {value:"1428", label: "1428 - Askvoll"},
+            {value:"1429", label: "1429 - Fjaler"},
+            {value:"1430", label: "1430 - Gaular"},
+            {value:"1431", label: "1431 - Jølster"},
+            {value:"1432", label: "1432 - Førde"},
+            {value:"1433", label: "1433 - Naustdal"},
+            {value:"1438", label: "1438 - Bremanger"},
+            {value:"1439", label: "1439 - Vågsøy"},
+            {value:"1441", label: "1441 - Selje"},
+            {value:"1443", label: "1443 - Eid"},
+            {value:"1444", label: "1444 - Hornindal"},
+            {value:"1445", label: "1445 - Gloppen"},
+            {value:"1449", label: "1449 - Stryn"},
+            {value:"1502", label: "1502 - Molde"},
+            {value:"1504", label: "1504 - Ålesund"},
+            {value:"1505", label: "1505 - Kristiansund"},
+            {value:"1511", label: "1511 - Vanylven"},
+            {value:"1514", label: "1514 - Sande"},
+            {value:"1515", label: "1515 - Herøy"},
+            {value:"1516", label: "1516 - Ulstein"},
+            {value:"1517", label: "1517 - Hareid"},
+            {value:"1519", label: "1519 - Volda"},
+            {value:"1520", label: "1520 - Ørsta"},
+            {value:"1523", label: "1523 - Ørskog"},
+            {value:"1524", label: "1524 - Norddal"},
+            {value:"1525", label: "1525 - Stranda"},
+            {value:"1526", label: "1526 - Stordal"},
+            {value:"1528", label: "1528 - Sykkylven"},
+            {value:"1529", label: "1529 - Skodje"},
+            {value:"1531", label: "1531 - Sula"},
+            {value:"1532", label: "1532 - Giske"},
+            {value:"1534", label: "1534 - Haram"},
+            {value:"1535", label: "1535 - Vestnes"},
+            {value:"1539", label: "1539 - Rauma"},
+            {value:"1543", label: "1543 - Nesset"},
+            {value:"1545", label: "1545 - Midsund"},
+            {value:"1546", label: "1546 - Sandøy"},
+            {value:"1547", label: "1547 - Aukra"},
+            {value:"1548", label: "1548 - Fræna"},
+            {value:"1551", label: "1551 - Eide"},
+            {value:"1554", label: "1554 - Averøy"},
+            {value:"1557", label: "1557 - Gjemnes"},
+            {value:"1560", label: "1560 - Tingvoll"},
+            {value:"1563", label: "1563 - Sunndal"},
+            {value:"1566", label: "1566 - Surnadal"},
+            {value:"1567", label: "1567 - Rindal"},
+            {value:"1571", label: "1571 - Halsa"},
+            {value:"1573", label: "1573 - Smøla"},
+            {value:"1576", label: "1576 - Aure"},
+            {value:"1804", label: "1804 - Bodø"},
+            {value:"1805", label: "1805 - Narvik"},
+            {value:"1811", label: "1811 - Bindal"},
+            {value:"1812", label: "1812 - Sømna"},
+            {value:"1813", label: "1813 - Brønnøy"},
+            {value:"1815", label: "1815 - Vega"},
+            {value:"1816", label: "1816 - Vevelstad"},
+            {value:"1818", label: "1818 - Herøy"},
+            {value:"1820", label: "1820 - Alstahaug"},
+            {value:"1822", label: "1822 - Leirfjord"},
+            {value:"1824", label: "1824 - Vefsn"},
+            {value:"1825", label: "1825 - Grane"},
+            {value:"1826", label: "1826 - Hattfjelldal"},
+            {value:"1827", label: "1827 - Dønna"},
+            {value:"1828", label: "1828 - Nesna"},
+            {value:"1832", label: "1832 - Hemnes"},
+            {value:"1833", label: "1833 - Rana"},
+            {value:"1834", label: "1834 - Lurøy"},
+            {value:"1835", label: "1835 - Træna"},
+            {value:"1836", label: "1836 - Rødøy"},
+            {value:"1837", label: "1837 - Meløy"},
+            {value:"1838", label: "1838 - Gildeskål"},
+            {value:"1839", label: "1839 - Beiarn"},
+            {value:"1840", label: "1840 - Saltdal"},
+            {value:"1841", label: "1841 - Fauske - Fuosko"},
+            {value:"1845", label: "1845 - Sørfold"},
+            {value:"1848", label: "1848 - Steigen"},
+            {value:"1849", label: "1849 - Hamarøy - Hábmer"},
+            {value:"1850", label: "1850 - Divtasvuodna - Tysfjord"},
+            {value:"1851", label: "1851 - Lødingen"},
+            {value:"1852", label: "1852 - Tjeldsund"},
+            {value:"1853", label: "1853 - Evenes"},
+            {value:"1854", label: "1854 - Ballangen"},
+            {value:"1856", label: "1856 - Røst"},
+            {value:"1857", label: "1857 - Værøy"},
+            {value:"1859", label: "1859 - Flakstad"},
+            {value:"1860", label: "1860 - Vestvågøy"},
+            {value:"1865", label: "1865 - Vågan"},
+            {value:"1866", label: "1866 - Hadsel"},
+            {value:"1867", label: "1867 - Bø"},
+            {value:"1868", label: "1868 - Øksnes"},
+            {value:"1870", label: "1870 - Sortland - Suortá"},
+            {value:"1871", label: "1871 - Andøy"},
+            {value:"1874", label: "1874 - Moskenes"},
+            {value:"1902", label: "1902 - Tromsø"},
+            {value:"1903", label: "1903 - Harstad - Hárstták"},
+            {value:"1911", label: "1911 - Kvæfjord"},
+            {value:"1913", label: "1913 - Skånland"},
+            {value:"1917", label: "1917 - Ibestad"},
+            {value:"1919", label: "1919 - Gratangen"},
+            {value:"1920", label: "1920 - Loabák - Lavangen"},
+            {value:"1922", label: "1922 - Bardu"},
+            {value:"1923", label: "1923 - Salangen"},
+            {value:"1924", label: "1924 - Målselv"},
+            {value:"1925", label: "1925 - Sørreisa"},
+            {value:"1926", label: "1926 - Dyrøy"},
+            {value:"1927", label: "1927 - Tranøy"},
+            {value:"1928", label: "1928 - Torsken"},
+            {value:"1929", label: "1929 - Berg"},
+            {value:"1931", label: "1931 - Lenvik"},
+            {value:"1933", label: "1933 - Balsfjord"},
+            {value:"1936", label: "1936 - Karlsøy"},
+            {value:"1938", label: "1938 - Lyngen"},
+            {value:"1939", label: "1939 - Storfjord - Omasvuotna - Omasvuono"},
+            {value:"1940", label: "1940 - Gáivuotna - Kåfjord - Kaivuono"},
+            {value:"1941", label: "1941 - Skjervøy"},
+            {value:"1942", label: "1942 - Nordreisa"},
+            {value:"1943", label: "1943 - Kvænangen"},
+            {value:"2002", label: "2002 - Vardø"},
+            {value:"2003", label: "2003 - Vadsø"},
+            {value:"2004", label: "2004 - Hammerfest"},
+            {value:"2011", label: "2011 - Guovdageaidnu - Kautokeino"},
+            {value:"2012", label: "2012 - Alta"},
+            {value:"2014", label: "2014 - Loppa"},
+            {value:"2015", label: "2015 - Hasvik"},
+            {value:"2017", label: "2017 - Kvalsund"},
+            {value:"2018", label: "2018 - Måsøy"},
+            {value:"2019", label: "2019 - Nordkapp"},
+            {value:"2020", label: "2020 - Porsanger - Porsángu - Porsanki"},
+            {value:"2021", label: "2021 - Kárášjohka - Karasjok"},
+            {value:"2022", label: "2022 - Lebesby"},
+            {value:"2023", label: "2023 - Gamvik"},
+            {value:"2024", label: "2024 - Berlevåg"},
+            {value:"2025", label: "2025 - Deatnu - Tana"},
+            {value:"2027", label: "2027 - Unjárga - Nesseby"},
+            {value:"2028", label: "2028 - Båtsfjord"},
+            {value:"2030", label: "2030 - Sør-Varanger"},
+            {value:"5001", label: "5001 - Trondheim"},
+            {value:"5004", label: "5004 - Steinkjer"},
+            {value:"5005", label: "5005 - Namsos"},
+            {value:"5011", label: "5011 - Hemne"},
+            {value:"5012", label: "5012 - Snillfjord"},
+            {value:"5013", label: "5013 - Hitra"},
+            {value:"5014", label: "5014 - Frøya"},
+            {value:"5015", label: "5015 - Ørland"},
+            {value:"5016", label: "5016 - Agdenes"},
+            {value:"5017", label: "5017 - Bjugn"},
+            {value:"5018", label: "5018 - Åfjord"},
+            {value:"5019", label: "5019 - Roan"},
+            {value:"5020", label: "5020 - Osen"},
+            {value:"5021", label: "5021 - Oppdal"},
+            {value:"5022", label: "5022 - Rennebu"},
+            {value:"5023", label: "5023 - Meldal"},
+            {value:"5024", label: "5024 - Orkdal"},
+            {value:"5025", label: "5025 - Røros"},
+            {value:"5026", label: "5026 - Holtålen"},
+            {value:"5027", label: "5027 - Midtre Gauldal"},
+            {value:"5028", label: "5028 - Melhus"},
+            {value:"5029", label: "5029 - Skaun"},
+            {value:"5030", label: "5030 - Klæbu"},
+            {value:"5031", label: "5031 - Malvik"},
+            {value:"5032", label: "5032 - Selbu"},
+            {value:"5033", label: "5033 - Tydal"},
+            {value:"5034", label: "5034 - Meråker"},
+            {value:"5035", label: "5035 - Stjørdal"},
+            {value:"5036", label: "5036 - Frosta"},
+            {value:"5037", label: "5037 - Levanger"},
+            {value:"5038", label: "5038 - Verdal"},
+            {value:"5039", label: "5039 - Verran"},
+            {value:"5040", label: "5040 - Namdalseid"},
+            {value:"5041", label: "5041 - Snåase - Snåsa"},
+            {value:"5042", label: "5042 - Lierne"},
+            {value:"5043", label: "5043 - Raarvihke - Røyrvik"},
+            {value:"5044", label: "5044 - Namsskogan"},
+            {value:"5045", label: "5045 - Grong"},
+            {value:"5046", label: "5046 - Høylandet"},
+            {value:"5047", label: "5047 - Overhalla"},
+            {value:"5048", label: "5048 - Fosnes"},
+            {value:"5049", label: "5049 - Flatanger"},
+            {value:"5050", label: "5050 - Vikna"},
+            {value:"5051", label: "5051 - Nærøy"},
+            {value:"5052", label: "5052 - Leka"},
+            {value:"5053", label: "5053 - Inderøy"},
+            {value:"5054", label: "5054 - Indre Fosen"}            
+        ],
+        value: [],
+        multiple: true,
+        autocomplete: true,
+        icon: "fa fa-times",
+        onChange: value => {lcode = value.join(','); },
+      });
+    </script>
+  </body>
+</html>
