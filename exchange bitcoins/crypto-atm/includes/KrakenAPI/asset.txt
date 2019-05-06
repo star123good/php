@@ -1,0 +1,267 @@
+Array
+(
+    [error] =&gt; Array
+        (
+        )
+
+    [result] =&gt; Array
+        (
+            [ADA] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; ADA
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 6
+                )
+
+            [ATOM] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; ATOM
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 6
+                )
+
+            [BCH] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; BCH
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [BSV] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; BSV
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [DASH] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; DASH
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [EOS] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; EOS
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [GNO] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; GNO
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [KFEE] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; FEE
+                    [decimals] =&gt; 2
+                    [display_decimals] =&gt; 2
+                )
+
+            [QTUM] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; QTUM
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 6
+                )
+
+            [USDT] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; USDT
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 4
+                )
+
+            [XDAO] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; DAO
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 3
+                )
+
+            [XETC] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; ETC
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XETH] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; ETH
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XICN] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; ICN
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XLTC] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; LTC
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XMLN] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; MLN
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XNMC] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; NMC
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XREP] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; REP
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XTZ] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XTZ
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 5
+                )
+
+            [XXBT] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XBT
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XXDG] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XDG
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 2
+                )
+
+            [XXLM] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XLM
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 5
+                )
+
+            [XXMR] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XMR
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [XXRP] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XRP
+                    [decimals] =&gt; 8
+                    [display_decimals] =&gt; 5
+                )
+
+            [XXVN] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; XVN
+                    [decimals] =&gt; 4
+                    [display_decimals] =&gt; 2
+                )
+
+            [XZEC] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; ZEC
+                    [decimals] =&gt; 10
+                    [display_decimals] =&gt; 5
+                )
+
+            [ZCAD] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; CAD
+                    [decimals] =&gt; 4
+                    [display_decimals] =&gt; 2
+                )
+
+            [ZEUR] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; EUR
+                    [decimals] =&gt; 4
+                    [display_decimals] =&gt; 2
+                )
+
+            [ZGBP] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; GBP
+                    [decimals] =&gt; 4
+                    [display_decimals] =&gt; 2
+                )
+
+            [ZJPY] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; JPY
+                    [decimals] =&gt; 2
+                    [display_decimals] =&gt; 0
+                )
+
+            [ZKRW] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; KRW
+                    [decimals] =&gt; 2
+                    [display_decimals] =&gt; 0
+                )
+
+            [ZUSD] =&gt; Array
+                (
+                    [aclass] =&gt; currency
+                    [altname] =&gt; USD
+                    [decimals] =&gt; 4
+                    [display_decimals] =&gt; 2
+                )
+
+        )
+
+)

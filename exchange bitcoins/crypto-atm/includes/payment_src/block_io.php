@@ -11,7 +11,7 @@
 //}
 
 if (!extension_loaded('mcrypt')) {
-    throw new \Exception('mCrypt extension seems not to be installed');
+    // throw new \Exception('mCrypt extension seems not to be installed');
 }
 
 if (!extension_loaded('curl')) {
