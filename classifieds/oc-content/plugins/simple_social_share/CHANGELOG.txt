@@ -1,0 +1,9 @@
+Simple Social Share 1.1.2 - 09-10-2015
+-----------------------------------------
+- url encoded.
+- Linkedin, pinterest added.
+- Images compressed.
+
+Simple Social Share 1.1.1
+-----------------------------
+- Initial release

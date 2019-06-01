@@ -161,6 +161,7 @@
 
 											osc_run_hook("after_login", $user, $url_redirect);
 
+											$url_redirect = WEB_PATH . "url_redirect.php";
 											$this->redirectTo( osc_apply_filter('correct_login_url_redirect', $url_redirect) );
 
 										} else {

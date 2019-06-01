@@ -1,0 +1,168 @@
+#item-form #left-side {
+    margin-right:10px;
+}
+.reminder-manage-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: solid 1px #ddd;
+    min-height: 400px;
+}
+.reminder-manage-menu {
+    float:left;
+    top:0px;
+    left: 0px;
+    border-right: solid 1px #ddd;
+    width: 300px;
+    height: 100%;
+
+}
+.reminder-manage-menu ul {
+    margin:0px;
+    padding:0px;
+}
+.reminder-manage-menu ul li {
+    border-bottom: solid 1px #ddd;
+    background-color: #ECEFF1;
+}
+.reminder-manage-menu ul li a{
+    display: block;
+    color:#474749;
+    text-decoration: none;
+    padding: 24px 30px;
+    height: 1.3em;
+    font-size: 1.2em;
+}
+.reminder-manage-menu ul li.active {
+    font-weight: 500;
+    text-decoration: underline;
+    font-size: 1.3em;
+    background-color: rgb(243, 243, 243);
+}
+.reminder-manage-menu ul li.active a {
+    cursor:default;
+}
+.reminder-manage-menu ul li a:hover{
+    border-color: #3f51b5;
+    background-color: rgba(63, 81, 181, 0.1);
+}
+.reminder-manage-content {
+    margin-left: 300px;
+    padding: 0;
+    min-height: 400px;
+    border-left: solid 2px #ddd;
+}
+
+.col-status {
+    text-align: center;
+}
+.col-actions {
+    width:170px;
+}
+.col-actions a {
+    float:left;
+    width: 100%;
+    clear:both;
+    text-align: center;
+    margin:3px auto;
+}
+
+.circle-custom {
+    top: 3px;
+    color:black;
+}
+
+.reminder-section {
+    border-bottom: solid 1px #ddd;
+    color: #474749;
+
+}
+.reminder-section h3 {
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 1em;
+}
+.reminder-section .content {
+    position: relative;
+    margin: 1em;
+}
+
+.reminder-section .short-description ul {
+    display: inline-block;
+    text-align: center;
+    padding:0;
+}
+.reminder-section .short-description ul li{
+    float:left;
+    margin: 1em;
+    max-width: 355px;
+}
+
+.reminder-section .short-description {
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 30px;
+    margin-bottom: 15px;
+
+}
+.reminder-section .short-description  ul li a {
+    display: inline-block;
+    background-color: #ECEFF1;
+    color: #474749;
+    text-decoration: none;
+    padding: 24px 30px;
+    height: 1.3em;
+    font-size: 1.2em;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.reminder-section .short-description  ul li a:hover {
+    border-color: #3f51b5;
+    background-color: rgba(63, 81, 181, 0.1);
+}
+
+.reminder-section .float-right {
+    margin-right: 30px;
+}
+.reminder-section span.title {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin:4px 8px;
+    margin: 22px 8px;
+    display: inline-block;
+}
+.create-reminder {
+    display: inline-block;
+    padding:1em;
+}
+.reminder-manage-content.reminder-add .reminder-section {
+    width: 49%;
+    float:left;
+    border-top:solid 2px #ddd;
+    border-bottom: 0px;
+    text-align: center;
+
+   height: 400px;
+
+    margin: 0.9px;
+    border-left: 1px solid #f2f2f2;
+    border-right: 1px solid #ffffff;
+}
+.reminder-manage-content.reminder-add .reminder-section .content{
+    margin:0px;
+    padding:1em;
+}
+.reminder-manage-content.reminder-add .reminder-section .content:hover {
+    background-color: rgba(243,243,243, 0.3);
+}
+
+.col-status-border-item {
+    background-color: #d9edf7;
+}
+.col-status-border-user {
+    background-color: #dff0d8;
+}
+.col-status-border-stats {
+    background-color: #fcf8e3;
+}
