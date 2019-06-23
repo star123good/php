@@ -58,15 +58,26 @@
 	}
 
 	// update table - where key0 = value0
-	function update_row($pdo, $table, $keys, $values){
+	function update_row($pdo, $table, $keys, $values, $where){
 		// where
-		$where2 = "`" . (implode('`= ?, `', $keys)) . "`= ? WHERE `" . $keys[0] . "` = ?";
-
+		// $where2 = "`" . (implode('`= ?, `', $keys)) . "`= ? WHERE `" . $keys[0] . "` = ?";
+		
 		try{
-			// insert
+			// update
+			$where2 = ""; $i=0;
+			foreach ($values as $key=>$value) {
+				if (isset($keys[$i]))
+				{
+					$where2 .= " `" . $keys[$i] . "`= '".$value."',";	
+				}
+				$i++;			
+			}
+			if ($where2!='') $where2 = substr($where2, 0, -1) . " WHERE ".$where;
+
 			$sql = "UPDATE ".$table." SET ".$where2;
 			$stmt = $pdo->prepare($sql);
-			$stmt->execute(array_push($values, $values[0]));
+			// $stmt->execute(array_push($values, $values[0]));
+			$stmt->execute();
 		}
 		catch(PDOException $e){
 			echo "error: update row";
@@ -74,6 +85,36 @@
 		}
 
 		return true;
+	}
+
+	// delete rows from table
+	function delete_rows($pdo, $table, $where){
+		try{
+			// delete
+			$sql = "DELETE FROM ".$table." WHERE ".$where;
+			$stmt = $pdo->prepare($sql);
+			$stmt->execute();
+		}
+		catch(PDOException $e){
+			echo "error: delete rows";
+			return false;
+		}
+
+		return true;
+	}
+
+	// get pagination from table
+	function get_pagination($pdo, $table, $current_page, $url, $where="1"){
+		$rows = select_rows($pdo, $table, $where);
+		$total_pages = (int)((count($rows) - 1) / PAGE_NUMBER) + 1;
+		if($current_page < 1) $current_page = 1;
+		else if($current_page > $total_pages) $current_page = $total_pages;
+		$paginations = "<ul>";
+		for($i = 1; $i <= $total_pages; $i++){
+			$paginations .= "<li><a class='" . (($i == $current_page) ? "searchPaginationSelected" : "" ) . "' href='" . $url . "&page=" . $i . "'>".$i."</a></li>";
+		}
+		$paginations .= "</ul>";
+		return $paginations;
 	}
 
 	// get array default|custom
@@ -375,6 +416,10 @@
 			$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
 			$header[] = "Accept-Language: en-us,en;q=0.5";
 			$header[] = "Pragma: ";
+			$header[] = "Access-Control-Allow-Origin: *";
+			$header[] = "Access-Control-Allow-Credentials : true";
+			$header[] = "Access-Control-Allow-Methods : GET, POST, OPTIONS";
+			$header[] = "Access-Control-Allow-Headers : Origin, Content-Type, Accept";
 			$headers[] = "X-CSRF-Token: $t";
 			$headers[] = "Cookie: $token_cookie";
 			curl_setopt($ch, CURLOPT_URL, $url);
@@ -407,7 +452,6 @@
 			$url = $url_next;
 
 			curl_setopt($ch, CURLOPT_URL, $url);
-			// curl_setopt($ch, CURLOPT_HEADER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/32.0.1700.107 Chrome/32.0.1700.107 Safari/537.36');
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_COOKIEJAR, $token_cookie);
@@ -685,6 +729,37 @@
 			return fread($file_handle, sizeof($file_name));
 		}
 		return "There is no file" . $file_name;
+	}
+
+	// redirect url
+	function redirect($url){
+		echo "<script>window.location='".$url."'</script>";
+		exit();
+	}
+
+	// get random value from array
+	function get_random_value($data_array, $select_key, $avoid_array=array()){
+		$key_array = array();
+		$key_min = 100000; 
+		$key_max = 0;
+		foreach($data_array as $key => $val){
+			$key_array[$key] = $val[$select_key];
+			if($key_min > $val[$select_key]) $key_min = $val[$select_key];
+			if($key_max < $val[$select_key]) $key_max = $val[$select_key];
+		}
+		// checking select_key
+		for($i = 0; $i < 30; $i++){
+			$key_temp = mt_rand($key_min, $key_max);
+			// check in key_array
+			$result = array_search($key_temp, $key_array);
+			if($result){
+				// check not in avoid_array
+				if(!in_array($key_temp, $avoid_array)) break;
+			}
+		}
+
+		// get random data
+		return $data_array[$result];
 	}
 
 	// database connect

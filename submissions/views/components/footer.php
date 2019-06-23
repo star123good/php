@@ -7,7 +7,7 @@
 	<div class="clear"></div>
 	<div id="footer">
 	    <div class="wrapper">
-	        <ul class="resp-toggle">
+	        <!-- <ul class="resp-toggle">
 	            <li><a href="<?php echo WEB_PATH; ?>user/login">Login</a></li>
 	            <li><a href="<?php echo WEB_PATH; ?>user/register">Register for a free account</a></li>
 	            <li class="publish"><a href="<?php echo WEB_PATH; ?>item/new">Publish your ad for free</a></li>
@@ -28,7 +28,7 @@
 			<a href="http://www.leadclub.net/classifieds"> Lead Club Free Classifieds</a> |
 			<a href="http://www.bestinjurylawyerusa.com/classifieds"> Bestinjurylawyerus Free Classified Ads</a>|
 			<a href="http://www.quickregister.info/classifieds">Quickregister.info Post Free Classified Ads</a> |
-			<a href="http://www.leadclub.net/linktous.html">Link to Us!</a>
+			<a href="http://www.leadclub.net/linktous.html">Link to Us!</a> -->
 	    </div>
 	</div>
 

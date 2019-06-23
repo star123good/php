@@ -52,9 +52,9 @@
 
 <body class="has-searchbox">
 
-	<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BMfqZ&webforms_id=20327204"></script>
+	<!-- <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BMfqZ&webforms_id=20327204"></script>
 	<br>
-	<br>
+	<br> -->
 
 	<div id="header">
 	    <!-- header ad 728x60-->
@@ -62,18 +62,18 @@
 	    <!-- /header ad 728x60-->
 	    </div>
 	    <div class="clear"></div>
-	    <div class="wrapper">
+	    <!-- <div class="wrapper">
 	        <div id="logo">
-	            <a href="<?php echo WEB_PATH; ?>">Free Leads Classifieds</a>
+	            <a href="<?php echo WEB_PATH1; ?>">Free Leads Classifieds</a>
 	            <span id="description">Post free ads and get free leads for your business. Ads stay live 90 days! Add YouTube videos, Facebook pages and direct links to your website. All links live and clickable!</span>
 	        </div>
 	        <ul class="nav">
-	            <li><a id="login_open" href="<?php echo WEB_PATH; ?>user/login">Login</a></li>
-	            <li><a href="<?php echo WEB_PATH; ?>user/register">Register for a free account</a></li>
-	            <li class="publish"><a href="<?php echo WEB_PATH; ?>item/new">Publish your ad for free</a></li>
+	            <li><a id="login_open" href="<?php echo WEB_PATH1; ?>user/login">Login</a></li>
+	            <li><a href="<?php echo WEB_PATH1; ?>user/register">Register for a free account</a></li>
+	            <li class="publish"><a href="<?php echo WEB_PATH1; ?>item/new">Publish your ad for free</a></li>
 	        </ul>
-	    </div>
-	    <form action="<?php echo WEB_PATH; ?>index.php" method="get" class="search nocsrf" >
+	    </div> -->
+	    <!-- <form action="<?php echo WEB_PATH1; ?>index.php" method="get" class="search nocsrf" >
 	        <input type="hidden" name="page" value="search"/>
 	        <div class="main-search">
 	            <div class="cell">
@@ -89,9 +89,43 @@
 	            </div>
 	        </div>
 	        <div id="message-seach"></div>
-	    </form>
+	    </form> -->
     </div>
 	<div class="wrapper wrapper-flash">
+		<div class="breadcrumb">
+			<style>
+				#custom_ul li:after{
+					content : "|";
+				}
+				#custom_ul li:last-child:after{
+					content : "";
+				}
+			</style>
+			<ul class="breadcrumb" id="custom_ul">
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=login" title="Log In" >Log In</a>
+				</li>
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=logout" title="Log Out" >Log Out</a>
+				</li>
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=register" title="Sign Up" >Register</a>
+				</li>
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=profile" title="Edit Profile" >Edit Profile</a>
+				</li>
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=customer" title="Show Profiles" >Show Profiles</a>
+				</li>
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=customers" title="Show Customers" >Show Customers</a>
+				</li>
+				<li>
+					<a href="<?php echo WEB_PATH; ?>index.php?type=show_sites" title="Show Sites" >Show Sites</a>
+				</li>
+			</ul>
+			<div class="clear"></div>
+		</div>
     </div>
 
 	<div class="clear"></div>

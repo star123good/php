@@ -3,11 +3,13 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`bestplum_submissions` /*!40100 DEFAULT 
 USE `bestplum_submissions`;
 
 CREATE TABLE `oc_t_campaign_customer` (
-  `pk_i_id` int(10) UNSIGNED NOT NULL,
+  `pk_i_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `s_username` varchar(40) NOT NULL,
   `s_password` char(60) NOT NULL,
-  `s_email` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `s_email` varchar(100) DEFAULT NULL,
+  `s_flag_adminer` enum('Y','N') NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`pk_i_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 ALTER TABLE `oc_t_campaign_customer`
   ADD PRIMARY KEY (`pk_i_id`);
@@ -45,9 +47,14 @@ ALTER TABLE `oc_t_campaign_profile`
   MODIFY `pk_i_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
   
 CREATE TABLE `oc_t_campaign_url_list` (
-  `pk_i_id` int(10) UNSIGNED NOT NULL,
-  `s_login_url` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `pk_i_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `s_web_url` varchar(100) NOT NULL,
+  `s_login_url` varchar(100) DEFAULT NULL,
+  `s_default_url` varchar(100) DEFAULT NULL,
+  `s_create_url` varchar(100) DEFAULT NULL,
+  `s_flage_enable` enum('Y','N') DEFAULT 'Y',
+  PRIMARY KEY (`pk_i_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
 ALTER TABLE `oc_t_campaign_url_list`
   ADD PRIMARY KEY (`pk_i_id`);
