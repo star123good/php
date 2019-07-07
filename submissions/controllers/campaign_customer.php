@@ -15,7 +15,9 @@
 			'customer_name' => '',
 			'customer_email' => '',
 			'customer_password' => '',
-			'admin_check' => ''
+			'verify_code' => get_verify_code(),
+			'admin_check' => '',
+			'flag_verify' => 'N'
 		);
 		$user_array = get_customize($_POST, $user_array);
 	}
@@ -52,16 +54,20 @@
 	if($flag_pass && $type != 'logout'){
 		$next_url = WEB_PATH."index.php?type=customer";
 
+		
+
 		if($type == "register"){
 			// register
-			if($flag_adminer) $user_array['admin_check'] = 'Y';
-			else $user_array['admin_check'] = 'N';
 			$keys = array(
 				's_username',
 				's_email',
 				's_password',
-				's_flag_adminer'
+				's_verify_code',
+				's_flag_adminer',
+				's_flag_verify'
 			);
+			if($flag_adminer) $user_array['admin_check'] = 'Y';
+			else $user_array['admin_check'] = 'N';
 			$user_id = insert_row($pdo, $table_customer, $keys, $user_array);
 		}
 		else if($type == "login"){
@@ -76,7 +82,8 @@
 			$keys = array(
 				's_username',
 				's_email',
-				's_password'
+				's_password',
+				's_verify_code'
 			);
 			update_row($pdo, $table_customer, $keys, $user_array, "`pk_i_id` = ".$user_array['customer_id']);
 			$next_url = WEB_PATH."index.php?type=customers";

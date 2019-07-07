@@ -27,16 +27,37 @@
     }
     // var_dump($url_id_olds);
 
+    
+    // var_dump($_SESSION['ads_url_id']);
     // get website url
-    $url_rows = select_rows($pdo, $table_url_list, "`s_flag_enable` = 'Y'");
-
-
-    // get website url
-    $url_row = get_random_value($url_rows, "pk_i_id", $url_id_olds);
+    if($type == "submit_ads" && isset($_SESSION['ads_url_id']) && $_SESSION['ads_url_id'] > 0){
+        // submit ads case
+        $url_rows = select_rows($pdo, $table_url_list, "`pk_i_id` = " . $_SESSION['ads_url_id']);
+        if(!empty($url_rows)) $url_row = $url_rows[0];
+        // var_dump($url_row);
+    }
+    else{
+        // other case
+        $url_rows = select_rows($pdo, $table_url_list, "`s_flag_enable` = 'Y'");
+        $url_row = get_random_value($url_rows, "pk_i_id", $url_id_olds);
+    }
+    // $url_row = array( 
+    //     "pk_i_id" => 1, 
+    //     "s_web_url" => "http://www.bestplumberfortlauderdale.com/classifieds",
+    //     "s_login_url" => "http://www.bestplumberfortlauderdale.com/classifieds/user/login",
+    //     "s_default_url" => "http://www.bestplumberfortlauderdale.com/classifieds/index.php",
+    //     "s_create_url" => "http://www.bestplumberfortlauderdale.com/classifieds/item/new",
+    //     "s_register_url" => "http://www.bestplumberfortlauderdale.com/classifieds/user/register",
+    //     "s_flag_enable" => "Y"
+    // );
     // var_dump($url_row);
+    
 
     $profiles = select_rows($pdo, $table_profile);
-	$random_profile = get_random_value($profiles, "pk_i_id");
+    $random_profile = get_random_value($profiles, "pk_i_id");
+    
+    // session url id
+    // $_SESSION['ads_url_id'] = 0;
 
     // exit();
    
@@ -72,7 +93,14 @@
                 "CSRFToken",
                 array("email" => $user_row['s_email'], "password" => $user_row['s_password']));
 
-            $contents = str_ireplace($url_row['s_default_url'], WEB_PATH1."index.php", $contents);
+            $contents = str_ireplace($url_row['s_default_url'], WEB_CORS_PATH.$url_row['s_default_url'], $contents);
+
+            // $contents = str_ireplace($url_row['s_default_url'], WEB_PATH1."index.php", $contents);
+            // $contents = str_ireplace(
+            //     array(WEB_PATH1."index.php?page=ajax&action=delete_image", WEB_PATH1."index.php?page=ajax&action=ajax_upload", WEB_PATH1."index.php?page=ajax&action=delete_ajax_upload"), 
+            //     array(WEB_CORS_PATH.$url_row['s_default_url']."?page=ajax&action=delete_image", WEB_CORS_PATH.$url_row['s_default_url']."?page=ajax&action=ajax_upload", WEB_CORS_PATH.$url_row['s_default_url']."?page=ajax&action=delete_ajax_upload"), 
+            //     $contents
+            // );
 
             // add javascript
             if(trim($contents) == ""){
@@ -86,16 +114,23 @@
                     $next_url = (WEB_PATH."index.php?type=edit_profile&profile=".$random_profile['pk_i_id']."&random_count=". ($random_submit_count - 1)) . $next_url;
                 }
                 else{
-                    $next_url = (WEB_PATH."index.php?type=customer");
+                    $next_url = WEB_PATH."index.php?type=submit_login&customer=".$customer_pk_id."&submit_count=".($submit_count-1);
                 }
                 
-                $contents="<html><head></head><body></body></html>";
+                $contents="<html><head></head><body>Submitting Ads onto ".$url_row['s_web_url']." is not working.<br>Because account or profile is not correct.</body></html>";
                 $javascripts = '<script type="text/javascript">
-                                        confirm("Submitting Ads is not working.\nBecause account or profile is not correct.");
-                                        window.location = "' . $next_url . '"; 
+									setTimeout(function(){ window.location="'.$next_url.'" }, 10000);
                                 </script>';
             }
             else{
+                // session url id save
+                $_SESSION['ads_url_id'] = $url_row['pk_i_id'];
+
+                $profile_row['s_description'] = str_replace(array("\\t", "\\n"), array(" ", " "), json_encode($profile_row['s_description']));
+                if($profile_row['s_html_description'] == 'N'){
+                    $temp_string = htmlentities($profile_row['s_description']);
+                    $profile_row['s_description'] = "\"" . substr($temp_string, 6, strlen($temp_string)-12) . "\"";
+                }
                 $next_url = WEB_PATH.'index.php?type=submit_ads&customer='.$customer_pk_id.'&submit_count='.($submit_count).((isset($random_submit_count) && $random_submit_count > 0) ? "&random_count=".$random_submit_count : "");
                 $javascripts = '<script type="text/javascript">
                                 $(document).ready(function(){
@@ -108,6 +143,15 @@
                                     }
                                     function getRandom(list){
                                         return list[Math.floor(Math.random() * list.length)];
+                                    }
+                                    function uploadImage(filepath, filename){
+                                        if(filename === "") return false;
+                                        fetch(filepath)
+                                        .then(res => res.blob())
+                                        .then(blob => {
+                                            let imageToFile = new File([blob], filename, blob);
+                                            $("#restricted-fine-uploader").fineUploader("addFiles", imageToFile);
+                                        });
                                     }
                                     function checkKeywordsElement(){
                                         if($("form#item-post input#meta_keywords").length){
@@ -155,12 +199,18 @@
 
                                     setTimeout(function(){ $("form#item-post input#titleen_US").val("'.$profile_row['s_title'].'"); }, 2000);
 
-                                    setTimeout(function(){ tinyMCE.get("descriptionen_US").setContent("'.$profile_row['s_description'].'"); }, 3000);
+                                    // tinyMCE text case
+                                    setTimeout(function(){ tinyMCE.get("descriptionen_US").setContent('.$profile_row['s_description'].'); }, 3000);
+                                    // textarea case ???
 
                                     // setTimeout(function(){ $("input[name=qqfile]").val("'.$profile_row['s_image_1'].'").change(); }, 4000);
                                     // $("input[name=qqfile]").change("file:///C:/Users/Administrator/Pictures/loading.gif");
                                     // $("#restricted-fine-uploader")
-                                    // setTimeout(function(){ $("input[name=qqfile]").trigger("click"); }, 20000);
+                                    setTimeout(function(){
+                                        uploadImage("'.WEB_PATH.$profile_row['s_image_path'].$profile_row['s_image_1'].'", "'.$profile_row['s_image_1'].'");
+                                        uploadImage("'.WEB_PATH.$profile_row['s_image_path'].$profile_row['s_image_2'].'", "'.$profile_row['s_image_2'].'");
+                                        uploadImage("'.WEB_PATH.$profile_row['s_image_path'].$profile_row['s_image_3'].'", "'.$profile_row['s_image_3'].'");
+                                    }, 5000);
 
                                     
                                     setTimeout(function(){
@@ -177,6 +227,7 @@
                                     setTimeout(function(){ $("form#item-post input#cityArea").val("'.$profile_row['s_city_area'].'"); }, 8000);
                                     setTimeout(function(){ $("form#item-post input#address").val("'.$profile_row['s_address'].'"); }, 9000);
 
+                                    
                                     checkKeywordsElement();
 
 
@@ -212,7 +263,7 @@
                 $customer_pk_id,
                 $profile_id,
                 $url_row['pk_i_id'],
-                ((isset($params['cityId'])) ? $params['cityId'] : "")
+                ((isset($params['cityId'])) ? $params['cityId'] : 0)
             );
             insert_row($pdo, $table_submit, $keys, $submit_array);
             if($submit_count > 1){
@@ -227,9 +278,7 @@
                 }
             } 
             $javascripts = '<script type="text/javascript">
-                                $(document).ready(function(){
-                                    setTimeout(function(){ window.location="'.$next_url.'" }, 10000);
-                                });
+                                setTimeout(function(){ window.location="'.$next_url.'" }, 10000);
                             </script>';
             break;
         default :

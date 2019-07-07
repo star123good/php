@@ -16,6 +16,7 @@
             'login_url' => '',
             'default_url' => '',
             'create_url' => '',
+            'register_url' => '',
             'site_id' => 0
 		);
 		$site_array = get_customize($_POST, $site_array);
@@ -33,7 +34,8 @@
             's_web_url',
             's_login_url',
             's_default_url',
-            's_create_url'
+            's_create_url',
+            's_register_url'
         );
         if($site_array['site_id'] > 0){
             // update site

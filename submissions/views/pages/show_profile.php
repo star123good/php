@@ -48,6 +48,32 @@
             <!-- <span>|</span> -->
             <strong><a class="delete" onclick="javascript:return confirm('Are you sure you want to delete?')" href="<?php echo WEB_PATH . "index.php?type=delete_profile&profile=" . $profile['pk_i_id'] ?>">Delete</a></strong>
         </p>
+        <div class="item-photos">
+            <a href="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_1'] ?>" class="main-photo" title="<?php echo $profile['s_image_1'] ?>">
+                <img src="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_1'] ?>" alt="<?php echo $profile['s_title'] ?>" title="<?php echo $profile['s_title'] ?>">
+            </a>
+            <?php if($profile['s_image_1'] != ""){ ?>
+                <div class="thumbs">
+                    <a href="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_1'] ?>" class="fancybox" data-fancybox-group="group" title="<?php echo $profile['s_image_1'] ?>">
+                        <img src="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_1'] ?>" width="75" alt="<?php echo $profile['s_title'] ?>" title="<?php echo $profile['s_title'] ?>">
+                    </a>
+                </div>
+            <?php } ?>
+            <?php if($profile['s_image_2'] != ""){ ?>
+                <div class="thumbs">
+                    <a href="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_2'] ?>" class="fancybox" data-fancybox-group="group" title="<?php echo $profile['s_image_2'] ?>">
+                        <img src="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_2'] ?>" width="75" alt="<?php echo $profile['s_title'] ?>" title="<?php echo $profile['s_title'] ?>">
+                    </a>
+                </div>
+            <?php } ?>
+            <?php if($profile['s_image_3'] != ""){ ?>
+                <div class="thumbs">
+                    <a href="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_3'] ?>" class="fancybox" data-fancybox-group="group" title="<?php echo $profile['s_image_3'] ?>">
+                        <img src="<?php echo WEB_PATH.$profile['s_image_path'].$profile['s_image_3'] ?>" width="75" alt="<?php echo $profile['s_title'] ?>" title="<?php echo $profile['s_title'] ?>">
+                    </a>
+                </div>
+            <?php } ?>
+        </div>
         <div id="description">
             <p><?php echo $profile['s_title']; ?></p>
         <div id="custom_fields">
@@ -85,9 +111,6 @@
                 </div>
                 <div class="meta">
                     <strong>Category: </strong><?php echo $category['s_name']; ?>
-                </div>
-                <div class="meta">
-                    <strong>Images: </strong><?php echo $profile['s_image_1'] . ", " . $profile['s_image_2'] . ", " . $profile['s_image_3']; ?>
                 </div>
             </div>
         </div>

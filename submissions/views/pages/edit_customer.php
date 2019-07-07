@@ -14,7 +14,7 @@
 	if($type == 'register'){
 	}
 	else if($type == 'customer_edit'){
-		if($customer_pk_id > 0){
+		if($customer_pk_id > 0 && $customer_pk_id != $customer_id){
 			if(!( isset($customer_id) && $customer_id > 0 && isset($adminer_id) && $adminer_id > 0 )) redirect(WEB_PATH."index.php");
 			$customers = select_rows($pdo, $table_customer, "`pk_i_id` = " . $customer_pk_id);
 		}

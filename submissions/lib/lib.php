@@ -154,7 +154,7 @@
 	  } 
 
 	// function getting url contents using curl
-	function url_get_contents($url, $useragent='cURL', $headers=false, $follow_redirects=true, $debug=false) {
+	function url_get_contents($url, $useragent='cURL', $headers=false, $follow_redirects=true, $debug=true) {
 
 		// initialise the CURL library
 		$ch = curl_init();
@@ -404,6 +404,7 @@
 				$postinfo .= $param_key ."=". $param_value . "&";	
 			}
 			$postinfo .= $csrf_token_field_name ."=". $t;
+			// var_dump($postinfo);
 			
 			$headers = array();
 
@@ -434,10 +435,12 @@
 			curl_setopt($ch, CURLOPT_ENCODING, "gzip,deflate");
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 260);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+			if(!$url_next) curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+			else curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			
 			
 			ob_start();
 			$html = curl_exec($ch);
@@ -449,20 +452,30 @@
 			// echo "</pre>";
 			// print($html);
 
-			$url = $url_next;
+			// if((!$url_next || $url_next == "") && $result['http_code'] == 500) { $url_next = $url_first; }
 
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/32.0.1700.107 Chrome/32.0.1700.107 Safari/537.36');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_COOKIEJAR, $token_cookie);
-			curl_setopt($ch, CURLOPT_COOKIEFILE, $token_cookie);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			if($url_next && $url_next != ""){
+				$url = $url_next;
 
-			ob_start();
-			$html = curl_exec($ch);
-			$result = curl_getinfo($ch);
-			ob_get_clean();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/32.0.1700.107 Chrome/32.0.1700.107 Safari/537.36');
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_COOKIEJAR, $token_cookie);
+				curl_setopt($ch, CURLOPT_COOKIEFILE, $token_cookie);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	
+				ob_start();
+				$html = curl_exec($ch);
+				$result = curl_getinfo($ch);
+				ob_get_clean();
+
+				// echo "<pre>";
+				// print_r($result);
+				// echo "</pre>";
+				// print($html);
+			} 
+			
 			
 			if (curl_errno($ch)) print curl_error($ch);
 			curl_close($ch); 
@@ -739,27 +752,29 @@
 
 	// get random value from array
 	function get_random_value($data_array, $select_key, $avoid_array=array()){
-		$key_array = array();
-		$key_min = 100000; 
-		$key_max = 0;
+		$temp_array = array();
+		$count = 0;
 		foreach($data_array as $key => $val){
-			$key_array[$key] = $val[$select_key];
-			if($key_min > $val[$select_key]) $key_min = $val[$select_key];
-			if($key_max < $val[$select_key]) $key_max = $val[$select_key];
-		}
-		// checking select_key
-		for($i = 0; $i < 30; $i++){
-			$key_temp = mt_rand($key_min, $key_max);
-			// check in key_array
-			$result = array_search($key_temp, $key_array);
-			if($result){
-				// check not in avoid_array
-				if(!in_array($key_temp, $avoid_array)) break;
+			if(!in_array($val[$select_key], $avoid_array)){
+				$temp_array[] = $val;
+				$count ++;
 			}
 		}
+		if($count > 0) return $temp_array[mt_rand(0, $count-1)];
+		else return null;
+	}
 
-		// get random data
-		return $data_array[$result];
+	// get verify code
+	// make a random value by several methods.
+	function get_verify_code($type="", $length=32){
+		if($length > 32) $length = 32;
+		switch($type){
+			case "pseudo":
+				return substr(bin2hex(openssl_random_pseudo_bytes($length/2+1)), 0, $length);
+			case "rand":
+			default:
+				return substr(md5(mt_rand()), 0, $length);
+		}
 	}
 
 	// database connect
@@ -777,5 +792,11 @@
 	catch(PDOException $e){
 		die('database connect error.');
 	}
+
+
+	// mail server setting
+	// ini_set("SMTP", "localhost");
+	// ini_set("smtp_port", 25);
+	// ini_set("sendmail_from", WEB_HOST);
 
 ?>

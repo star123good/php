@@ -52,6 +52,34 @@ switch($type){
         $flag_show = false;
         $page = "campaign_profile.php";
         break;
+    case 'email_verify':
+        $flag_show = false;
+        $page = "campaign_verify.php";
+        break;
+    case 'email_confirm':
+        $flag_show = false;
+        $page = "campaign_verify.php";
+        break;
+    case 'register_ads':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
+    case 'confirm_ads':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
+    case 'register_ads_link':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
+    case 'register_ads_put':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
+    case 'verify_ads':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
     case 'logout':
         $flag_show = false;
         $page = "campaign_customer.php";
@@ -82,6 +110,10 @@ switch($type){
         $flag_show = false;
         $page = "campaign_customer.php";
         break;
+    case 'register_ads_show':
+        $flag_show = true;
+        $page = "show_sites.php";
+        break;
     case 'show_sites':
         $flag_show = true;
         $page = "show_sites.php";
@@ -95,6 +127,10 @@ switch($type){
     case 'delete_site':
         $flag_show = false;
         $page = "campaign_site.php";
+        break;
+    case 'ajax':
+        $flag_show = false;
+        $page = "campaign_ajax.php";
         break;
     case 'login':
     default:

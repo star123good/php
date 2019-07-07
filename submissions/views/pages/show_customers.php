@@ -19,7 +19,7 @@
         ?>
         <li class="listing-card">
             <a class="listing-thumb" title="<?php echo $customer['s_username'] ?>" href="<?php echo WEB_PATH . "index.php?type=customer&customer=" . $customer['pk_i_id'] ?>">
-                <img src="<?php echo WEB_PATH1; ?>oc-content/themes/bender/images/no_photo.gif" alt="" width="140" height="100">
+                <img src="<?php echo WEB_PATH; ?>oc-content/themes/bender/images/user_default.gif" alt="" width="140" height="100">
             </a>
             <div class="listing-detail">
                 <div class="listing-cell">
@@ -38,6 +38,14 @@
                             <a href="<?php echo WEB_PATH . "index.php?type=customer_edit&customer=" . $customer['pk_i_id'] ?>" rel="nofollow">Edit Customer</a>
                             <span>|</span>
                             <a class="delete" onclick="javascript:return confirm('Are you sure you want to delete?')" href="<?php echo WEB_PATH . "index.php?type=customer_delete&customer=" . $customer['pk_i_id'] ?>">Delete</a>
+                            <span>|</span>
+                            <a onclick="javascript:return confirm('Are you sure you want to regiter on Ads sites?')" href="<?php echo WEB_PATH . "index.php?type=register_ads_show&customer=" . $customer['pk_i_id'] ?>">Register</a>
+                            <span>|</span>
+                            <a onclick="javascript:confirmBtnClickHandle(event)" href="<?php echo WEB_PATH . "index.php?type=confirm_ads&customer=" . $customer['pk_i_id'] ?>">Confirm</a>
+                            <?php if($customer['s_flag_verify'] == "N"){ ?>
+                            <span>|</span>
+                            <a onclick="javascript:return confirm('Are you sure you want to email verify?')" href="<?php echo WEB_PATH . "index.php?type=email_verify&customer=" . $customer['pk_i_id'] ?>">Email Verify</a>
+                            <?php } ?>
                         </span>
                     </div>
                 </div>

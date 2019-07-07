@@ -39,6 +39,9 @@
     // random submit count
     $random_submit_count = 0;
     if(isset($_GET['random_count']) && $_GET['random_count'] > 0) $random_submit_count = $_GET['random_count'];
+    // ajax action
+    $ajax_action = '';
+    if(isset($_GET['action']) && $_GET['action'] != "") $ajax_action = $_GET['action'];
 
 
     // router    

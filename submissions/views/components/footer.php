@@ -3,6 +3,20 @@
 		</div>
 	</div>
 
+	<script>
+		function confirmBtnClickHandle(e){
+			e.preventDefault();
+			if(confirm('Are you sure you want to confirm accounts once registered?')){
+				let server = prompt('What\'s the email server name?');
+				let port = prompt('What\'s the email server port?');
+				let type = 'pop_ssl';
+				if(confirm('Is the Connection Type POP3 with SSL?')) type = 'pop_ssl';
+				else type = 'pop';
+				window.location = e.target.href+"&email_server="+server+"&email_port="+port+"&email_type="+type;
+			}
+		}
+	</script>
+
 	<!-- footer -->
 	<div class="clear"></div>
 	<div id="footer">

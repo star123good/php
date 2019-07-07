@@ -10,18 +10,25 @@
 
 
     // get customer & profiles
-    if((isset($adminer_id) && $adminer_id > 0) && (!(isset($customer_pk_id) && $customer_pk_id > 0))){
-        $customers = select_rows($pdo, $table_customer, "`pk_i_id` = " . $customer_id);
-        $profiles = select_rows($pdo, $table_profile, " true order by `pk_i_id` asc limit " . PAGE_NUMBER * ($current_page - 1) . ", " . PAGE_NUMBER . " ");
-        $paginations = get_pagination($pdo, $table_profile, $current_page, WEB_PATH."index.php?type=customer&customer=".$customer_pk_id);
-
-        
-    } 
+    if((isset($adminer_id) && $adminer_id > 0)){
+        if((isset($customer_pk_id) && $customer_pk_id > 0)){
+            $customers = select_rows($pdo, $table_customer, "`pk_i_id` = " . $customer_pk_id);
+            $profiles = select_rows($pdo, $table_profile, "`fk_i_customer_id` = " . $customer_pk_id . " order by `pk_i_id` asc limit " . PAGE_NUMBER * ($current_page - 1) . ", " . PAGE_NUMBER . " ");
+            $paginations = get_pagination($pdo, $table_profile, $current_page, WEB_PATH."index.php?type=customer&customer=".$customer_pk_id, "`fk_i_customer_id` = " . $customer_pk_id);
+        }
+        else{
+            $customers = select_rows($pdo, $table_customer, "`pk_i_id` = " . $customer_id);
+            $profiles = select_rows($pdo, $table_profile, " true order by `pk_i_id` asc limit " . PAGE_NUMBER * ($current_page - 1) . ", " . PAGE_NUMBER . " ");
+            $paginations = get_pagination($pdo, $table_profile, $current_page, WEB_PATH."index.php?type=customer&customer=".$customer_pk_id);
+        }
+    }
     else{
-        $customers = select_rows($pdo, $table_customer, "`pk_i_id` = " . $customer_pk_id);
-        $profiles = select_rows($pdo, $table_profile, "`fk_i_customer_id` = " . $customer_pk_id . " order by `pk_i_id` asc limit " . PAGE_NUMBER * ($current_page - 1) . ", " . PAGE_NUMBER . " ");
-        $paginations = get_pagination($pdo, $table_profile, $current_page, WEB_PATH."index.php?type=customer&customer=".$customer_pk_id, "`fk_i_customer_id` = " . $customer_pk_id);
-    } 
+        $customers = select_rows($pdo, $table_customer, "`pk_i_id` = " . $customer_id);
+        $profiles = select_rows($pdo, $table_profile, "`fk_i_customer_id` = " . $customer_id . " order by `pk_i_id` asc limit " . PAGE_NUMBER * ($current_page - 1) . ", " . PAGE_NUMBER . " ");
+        $paginations = get_pagination($pdo, $table_profile, $current_page, WEB_PATH."index.php?type=customer&customer=".$customer_id, "`fk_i_customer_id` = " . $customer_id);
+    }
+
+    
 
     if($customers) $customer = $customers[0];
 
@@ -45,9 +52,16 @@
         <p id="edit_item_view">
             <strong><a href="<?php echo WEB_PATH . "index.php?type=customer_edit&customer=" . $customer['pk_i_id'] ?>" rel="nofollow">Edit Customer</a></strong>
             <span>|</span>
+            <strong><a onclick="javascript:return confirm('Are you sure you want to email verify?')" href="<?php echo WEB_PATH . "index.php?type=email_verify&customer=" . $customer['pk_i_id'] ?>">Email Verify</a></strong>
+            <span>|</span>
             <?php if(isset($adminer_id) && $adminer_id > 0){ ?>
+            <strong><a onclick="javascript:return confirm('Are you sure you want to regiter on Ads sites?')" href="<?php echo WEB_PATH . "index.php?type=register_ads_show&customer=" . $customer['pk_i_id'] ?>">Register Ads</a></strong>
+            <span>|</span>
+            <strong><a onclick="javascript:confirmBtnClickHandle(event)" href="<?php echo WEB_PATH . "index.php?type=confirm_ads&customer=" . $customer['pk_i_id'] ?>">Confirm Ads</a></strong>
+            <span>|</span>
             <strong><a href="<?php echo WEB_PATH . "index.php?type=customer_delete&customer=" . $customer['pk_i_id'] ?>" rel="nofollow" onclick="javascript:return confirm('Are you sure you want to delete?')">Delete Customer</a></strong>
             <span>|</span>
+            <?php if($random_profile){ ?>
             <strong><a href="#" rel="nofollow" id="random_submit">Random Submit</a></strong>
             <span>|</span>
             <script>
@@ -63,7 +77,7 @@
                     });
                 });
             </script>
-            <?php } ?>
+            <?php }} ?>
             <strong><a href="<?php echo WEB_PATH . "index.php?type=profile&customer=".$customer['pk_i_id'] ?>" rel="nofollow">Add new Profile</a></strong>
         </p>
         <div id="description">
@@ -100,7 +114,7 @@
                 ?>
                 <li class="listing-card">
                     <a class="listing-thumb" title="<?php echo $profile['s_title'] ?>" href="<?php echo WEB_PATH . "index.php?type=show_profile&profile=" . $profile['pk_i_id'] ?>">
-                        <img src="<?php echo WEB_PATH1; ?>oc-content/themes/bender/images/no_photo.gif" alt="" width="140" height="100">
+                        <img src="<?php echo WEB_PATH; ?>oc-content/themes/bender/images/no_photo.gif" alt="" width="140" height="100">
                     </a>
                     <div class="listing-detail">
                         <div class="listing-cell">

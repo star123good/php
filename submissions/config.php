@@ -20,12 +20,14 @@
 	define('THEMES_PATH', CONTENT_PATH . 'themes/');
 	define('PLUGINS_PATH', CONTENT_PATH . 'plugins/');
 	define('TRANSLATIONS_PATH', CONTENT_PATH . 'languages/');
+	define('UPLOADS_PATH', CONTENT_PATH . 'uploads/');
 	
 	// PATHs
     define('ASSETS_PATH', ABS_PATH . 'assets/');
     define('JAVASCRIPTS_PATH', ASSETS_PATH . 'js/');
     define('CONTROLLERS_PATH', ABS_PATH . 'controllers/');
     define('LIBRARY_PATH', ABS_PATH . 'lib/');
+    define('MAILER_PATH', LIBRARY_PATH . 'PHPMailer-master/');
     define('VIEW_PATH', ABS_PATH . 'views/');
     define('PAGES_PATH', VIEW_PATH . 'pages/');
     define('COMPONENTS_PATH', VIEW_PATH . 'components/');
@@ -55,22 +57,31 @@
 
 	define('REL_WEB_URL', '/submissions/');
 
-	define('WEB_PATH', 'http://bestplumberfortlauderdale.localhost/submissions/');
-	define('WEB_PATH1', 'http://bestplumberfortlauderdale.localhost/classifieds/');
-	// define('WEB_PATH', 'http://www.bestplumberfortlauderdale.com/submissions/');
-	// define('WEB_PATH1', 'http://www.bestplumberfortlauderdale.com/classifieds/');
+	define('WEB_HOST', 'bestplumberfortlauderdale.localhost');
+	// define('WEB_HOST', 'www.bestplumberfortlauderdale.com');
+	define('WEB_PATH', 'http://'.WEB_HOST.'/submissions/');
+	define('WEB_PATH1', 'http://'.WEB_HOST.'/classifieds/');
+
+	define('WEB_CORS_PATH', 'https://cors-anywhere.herokuapp.com/');
 
 	define('COOKIE_PATH', 'cookie_test.txt');
 
 
-	define('PAGE_NUMBER', 20);
+	define('PAGE_NUMBER', 100);
+
+	// Mail Sever
+	define('MAILER_PORT', 587);
+	define('MAILER_SECURE', 'tls');
+	define('MAILER_DEBUG', 2);
+	define('MAILER_AUTH', true);
 
 
 	$table_customer = "oc_t_campaign_customer";
 	$table_profile = "oc_t_campaign_profile";
 	$table_url_list = "oc_t_campaign_url_list";
 	$table_submit = "oc_t_campaign_submit";
-	$table_admin_password = "oc_t_campaign_admin_password";
+	$table_admin_password = "oc_t_campaign_admin";
+	$table_register = "oc_t_campaign_register";
 
 	$table_category = "oc_t_category_description";
 ?>

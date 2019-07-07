@@ -11,6 +11,7 @@
 		'login_url' => '',
 		'default_url' => '',
 		'create_url' => '',
+		'register_url' => '',
 		'site_id' => 0
 	);
 
@@ -28,6 +29,7 @@
                     'login_url' => $site['s_login_url'],
                     'default_url' => $site['s_default_url'],
                     'create_url' => $site['s_create_url'],
+                    'register_url' => $site['s_register_url'],
                     'site_id' => $site['pk_i_id']
                 );
                 $flag_pass = true;
@@ -75,6 +77,13 @@
                             <label class="control-label" for="create_url">Create New Item URL</label>
                             <div class="controls">
                                 <input id="create_url" name="create_url" type="text" value="<?php echo $customer_fields['create_url']; ?>" style="width:80%" />
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="register_url">Register URL</label>
+                            <div class="controls">
+                                <input id="register_url" name="register_url" type="text" value="<?php echo $customer_fields['register_url']; ?>" style="width:80%" />
                             </div>
                         </div>
 
