@@ -20,7 +20,7 @@
 			foreach ($values as $key=>$value) {
 				if (isset($keys[$i]))
 				{
-					$where2 .= " `" . $keys[$i] . "`= '".$value."',";	
+					$where2 .= " `" . $keys[$i] . "`= '".addslashes($value)."',";	
 				}
 				$i++;			
 			}
@@ -68,7 +68,7 @@
 			foreach ($values as $key=>$value) {
 				if (isset($keys[$i]))
 				{
-					$where2 .= " `" . $keys[$i] . "`= '".$value."',";	
+					$where2 .= " `" . $keys[$i] . "`= '".addslashes($value)."',";	
 				}
 				$i++;			
 			}
@@ -81,6 +81,7 @@
 		}
 		catch(PDOException $e){
 			echo "error: update row";
+			// var_dump($e);
 			return false;
 		}
 
@@ -378,7 +379,8 @@
 
 		/* print_r($response); */
 		
-		if (curl_errno($ch)) die(curl_error($ch));
+		// if (curl_errno($ch)) die(curl_error($ch));
+		if (curl_errno($ch)) return "";
 		libxml_use_internal_errors(true);
 		$dom = new DomDocument();
 		$dom->loadHTML($response);
@@ -477,7 +479,8 @@
 			} 
 			
 			
-			if (curl_errno($ch)) print curl_error($ch);
+			// if (curl_errno($ch)) print curl_error($ch);
+			if (curl_errno($ch)) return "";
 			curl_close($ch); 
 		}
 
@@ -517,9 +520,10 @@
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		$response = curl_exec($ch);
 
-		/* print_r($response); */
+		// print_r($response);
 		
-		if (curl_errno($ch)) die(curl_error($ch));
+		// if (curl_errno($ch)) die(curl_error($ch));
+		if (curl_errno($ch)) return "";
 		libxml_use_internal_errors(true);
 		$dom = new DomDocument();
 		$dom->loadHTML($response);
@@ -600,7 +604,8 @@
 			$response = curl_exec($ch);
 			ob_get_clean();
 			
-			if (curl_errno($ch)) die(curl_error($ch));
+			// if (curl_errno($ch)) die(curl_error($ch));
+			if (curl_errno($ch)) return "";
 			libxml_use_internal_errors(true);
 			$dom = new DomDocument();
 			$dom->loadHTML($response);
@@ -665,7 +670,7 @@
 				ob_start();
 				$html = curl_exec($ch);
 				$result = curl_getinfo($ch);
-				var_dump($result);
+				// var_dump($result);
 				ob_get_clean();
 
 				// echo "<pre>";
@@ -673,7 +678,8 @@
 				// echo "</pre>";
 				// print($html);
 
-				if (curl_errno($ch)) print curl_error($ch);
+				// if (curl_errno($ch)) print curl_error($ch);
+				if (curl_errno($ch)) return "";
 				curl_close($ch); 
 			}
 
@@ -776,6 +782,32 @@
 				return substr(md5(mt_rand()), 0, $length);
 		}
 	}
+
+	// {||} pattern string
+	// get random pattern
+	function get_pattern_strings($str){
+		$search = array();
+		$replace = array();
+		$total_pattern = '/{[^}]+}/m';
+		preg_match_all($total_pattern, $str, $matches, PREG_SET_ORDER, 0);
+		if(count($matches) > 0){
+			foreach($matches as $match){
+				$search[] = $match[0];
+				$sub_str = substr($match[0], 1, strlen($match[0])-2);
+				$sub_pattern = '/[^|]+/m';
+				preg_match_all($sub_pattern, $sub_str, $datas, PREG_SET_ORDER, 0);
+				if(count($datas) > 0){
+					$random_index = rand(0, count($datas) - 1);
+					$replace[] = $datas[$random_index][0];
+				}
+				else{
+					$replace[] = $sub_str;
+				}
+			}
+		}
+		return str_replace($search, $replace, $str);
+	}
+
 
 	// database connect
 	$dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=".CHARSET;

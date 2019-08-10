@@ -71,7 +71,7 @@
 
             try {
                 //Server settings
-                // $mail->SMTPDebug = MAILER_DEBUG;                                    // Enable verbose debug output
+                // $mail->SMTPDebug = MAILER_DEBUG;                                 // Enable verbose debug output
                 $mail->isSMTP();                                                    // Set mailer to use SMTP
                 $mail->Host       = $mail_server;                                   // Specify main and backup SMTP servers
                 $mail->SMTPAuth   = MAILER_AUTH;                                    // Enable SMTP authentication

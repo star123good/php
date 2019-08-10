@@ -68,6 +68,14 @@ switch($type){
         $flag_show = false;
         $page = "campaign_ads.php";
         break;
+    case 'multiple_register':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
+    case 'multiple_confirm':
+        $flag_show = false;
+        $page = "campaign_ads.php";
+        break;
     case 'register_ads_link':
         $flag_show = false;
         $page = "campaign_ads.php";

@@ -82,12 +82,6 @@
 
 	if(!$flag_pass) redirect(WEB_PATH."index.php");
 
-
-
-	
-	
-	
-
 ?>
 
             <!--  Start of body  -->
@@ -95,6 +89,19 @@
 			    <div class="header">
 			        <h1>Ad Campaign Profile</h1>
 			    </div>
+				<script>
+					function loadFileAsText(fromId, toId){
+						var fileToLoad = document.getElementById(fromId).files[0];
+
+						var fileReader = new FileReader();
+						fileReader.onload = function(fileLoadedEvent){
+							var textFromFileLoaded = fileLoadedEvent.target.result;
+							document.getElementById(toId).value = textFromFileLoaded;
+						};
+
+						fileReader.readAsText(fileToLoad, "UTF-8");
+					}
+				</script>
 			    <div class="resp-wrapper">
 
 					<form action="<?php echo WEB_PATH; ?>index.php?type=post_profile<?php echo (isset($random_submit_count) && $random_submit_count > 0) ? "&random_count=".$random_submit_count : "" ?>" method="post" onsubmit="return validateForm()" name="profile_form" id="profile_form">
@@ -103,10 +110,40 @@
 						<input type="hidden" name="id" value="<?php echo $customer_fields['id']; ?>"/>
 						<input type="hidden" name="save_only" id="save_only" value=""/>
 
+						<?php
+							if($adminer_id > 0){
+						?>
+						<div class="control-group">
+							<label class="control-label" for="select_customer">Select Customers</label>
+							<div class="controls">
+								<select id="select_customer" value="">
+									<?php 
+										$all_customers = select_rows($pdo, $table_customer);
+										foreach ($all_customers as $value) {
+											if($value['pk_i_id'] == $customer_fields['customer_id']) $selected = "selected";
+											else $selected = "";
+											echo '<option value="'.$value['pk_i_id'].'" '.$selected.' >'.$value['s_username'].'</option>';
+										} 
+									?>
+								</select>
+							</div>
+							<script>
+							$(document).ready(function() {
+								$(document).on("change", "#select_customer", function(e){
+									$("input[name=customer_id]").attr("value", e.target.value);
+								});
+							});
+							</script>
+						</div>
+						<?php
+							}
+						?>
+						
 						<div class="control-group">
 							<label class="control-label" for="campaign_email">Campaign Email</label>
 							<div class="controls">
 								<input id="campaign_email" name="campaign_email" type="text" value="<?php echo $customer_fields['campaign_email']; ?>" />
+								<input type="file" class="campaign_file_upload" id="campaign_email_file" onchange='loadFileAsText("campaign_email_file", "campaign_email")'/>
 							</div>
 						</div>
 
@@ -121,6 +158,7 @@
 							<label class="control-label" for="title">Title</label>
 							<div class="controls">
 								<input id="title" name="title" type="text" value="<?php echo $customer_fields['title']; ?>" />
+								<input type="file" class="campaign_file_upload" id="title_file" onchange='loadFileAsText("title_file", "title")'/>
 							</div>
 						</div>
 
@@ -136,6 +174,7 @@
 								<textarea id="description" name="description" rows="10" cols="" value="" >
 									<?php echo $customer_fields['description']; ?>
 								</textarea>
+								<input type="file" class="campaign_file_upload" id="description_file" onchange='loadFileAsText("description_file", "description")'/>
 							</div>
 						</div>
 						
@@ -143,6 +182,7 @@
 							<label class="control-label" for="website">Website</label>
 							<div class="controls">
 								<input id="website" name="website" type="text" value="<?php echo $customer_fields['website']; ?>" />
+								<input type="file" class="campaign_file_upload" id="website_file" onchange='loadFileAsText("website_file", "website")'/>
 							</div>
 						</div>
 						
@@ -150,6 +190,7 @@
 							<label class="control-label" for="keywords">Keywords</label>
 							<div class="controls">
 								<input id="keywords" name="keywords" type="text" value="<?php echo $customer_fields['keywords']; ?>" />
+								<input type="file" class="campaign_file_upload" id="keywords_file" onchange='loadFileAsText("keywords_file", "keywords")'/>
 							</div>
 						</div>
 						
@@ -157,6 +198,7 @@
 							<label class="control-label" for="facebook_page">Facebook Page</label>
 							<div class="controls">
 								<input id="facebook_page" name="facebook_page" type="text" value="<?php echo $customer_fields['facebook_page']; ?>" />
+								<input type="file" class="campaign_file_upload" id="facebook_page_file" onchange='loadFileAsText("facebook_page_file", "facebook_page")'/>
 							</div>
 						</div>
 						
@@ -164,6 +206,7 @@
 							<label class="control-label" for="affiliate_link">Affiliate Link</label>
 							<div class="controls">
 								<input id="affiliate_link" name="affiliate_link" type="text" value="<?php echo $customer_fields['affiliate_link']; ?>" />
+								<input type="file" class="campaign_file_upload" id="affiliate_link_file" onchange='loadFileAsText("affiliate_link_file", "affiliate_link")'/>
 							</div>
 						</div>
 						
@@ -171,6 +214,7 @@
 							<label class="control-label" for="youtube_url">YouTube Url</label>
 							<div class="controls">
 								<input id="youtube_url" name="youtube_url" type="text" value="<?php echo $customer_fields['youtube_url']; ?>" />
+								<input type="file" class="campaign_file_upload" id="youtube_url_file" onchange='loadFileAsText("youtube_url_file", "youtube_url")'/>
 							</div>
 						</div>
 						
@@ -178,6 +222,7 @@
 							<label class="control-label" for="address">Address</label>
 							<div class="controls">
 								<input id="address" name="address" type="text" value="<?php echo $customer_fields['address']; ?>" />
+								<input type="file" class="campaign_file_upload" id="address_file" onchange='loadFileAsText("address_file", "address")'/>
 							</div>
 						</div>
 						
@@ -185,6 +230,7 @@
 							<label class="control-label" for="phone">Phone</label>
 							<div class="controls">
 								<input id="phone" name="phone" type="text" value="<?php echo $customer_fields['phone']; ?>" />
+								<input type="file" class="campaign_file_upload" id="phone_file" onchange='loadFileAsText("phone_file", "phone")'/>
 							</div>
 						</div>
 
@@ -192,6 +238,7 @@
 							<label class="control-label" for="city_area">City Area</label>
 							<div class="controls">
 								<input id="city_area" name="city_area" type="text" value="<?php echo $customer_fields['city_area']; ?>" />
+								<input type="file" class="campaign_file_upload" id="city_area_file" onchange='loadFileAsText("city_area_file", "city_area")'/>
 							</div>
 						</div>
 						

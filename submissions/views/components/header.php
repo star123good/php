@@ -48,6 +48,14 @@
 	<script type="text/javascript" src="<?php echo WEB_PATH; ?>oc-includes/osclass/assets/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="<?php echo WEB_PATH; ?>oc-content/themes/bender/js/global.js"></script>
 
+	<style>
+		input.campaign_file_upload{
+			position: absolute;
+			width: 170px !important;
+			margin-left: 10px;
+		}
+	</style>
+
 </head>
 
 <body class="has-searchbox">

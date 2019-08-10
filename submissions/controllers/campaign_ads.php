@@ -12,7 +12,7 @@
 
     $next_url = WEB_PATH."index.php?type=customers";
 
-    if((isset($adminer_id) && $adminer_id > 0) && (isset($customer_pk_id) && $customer_pk_id > 0)){
+    if((isset($adminer_id) && $adminer_id > 0) && (isset($customer_pk_id) && ($customer_pk_id > 0 || $customer_pk_id == "all"))){
         // adminer
         if($type == "register_ads"){
             // register on ads sites
@@ -21,7 +21,14 @@
             if(isset($_GET['register_sites']) && $_GET['register_sites'] != ""){
                 $site_ids = explode("*", $_GET['register_sites']);
                 $_SESSION['register_links'] = $site_ids;
-                $next_url = WEB_PATH."index.php?type=register_ads_link&customer=".$customer_pk_id;
+                if($customer_pk_id > 0){
+                    $next_url = WEB_PATH."index.php?type=register_ads_link&customer=".$customer_pk_id;
+                }
+                else if(isset($_SESSION['customer_register_ids']) && is_array($_SESSION['customer_register_ids']) && count($_SESSION['customer_register_ids']) > 0){
+                    $customer_ids = $_SESSION['customer_register_ids'];
+                    $_SESSION['customer_register_ids'] = array_slice($customer_ids, 1);
+                    $next_url = WEB_PATH."index.php?type=register_ads_link&customer=".$customer_ids[0];
+                }
             }
             // exit();
         }
@@ -41,35 +48,51 @@
 
                     $contents = get_url($site_register_url, null, null);
 
-                    $javascripts = '<script type="text/javascript">
-                                        $(document).ready(function(){
-                                            $("form[name=register]").prepend("<input type=\"hidden\" name=\"url_link\" id=\"url_link\" />");
-                                            $("form[name=register] input#url_link").val($("form[name=register]").attr("action"));
-                                            $("form[name=register]").attr("action", "'. $next_url .'");
+                    if(strstr($contents['html'], "</body>")) {
 
-                                            if($("form[name=register] input#s_name").length){
-                                                setTimeout(function(){ $("form input#s_name").val("'.$customer['s_username'].'"); }, 1000);
-                                            }
-                                            if($("form[name=register] input#s_email").length){
-                                                setTimeout(function(){ $("form input#s_email").val("'.$customer['s_email'].'"); }, 2000);
-                                            }
-                                            if($("form[name=register] input#s_password").length){
-                                                setTimeout(function(){ $("form input#s_password").val("'.$customer['s_password'].'"); }, 3000);
-                                            }
-                                            if($("form[name=register] input#s_password2").length){
-                                                setTimeout(function(){ $("form input#s_password2").val("'.$customer['s_password'].'"); }, 4000);
-                                            }
+                        $javascripts = '<script type="text/javascript">
+                                            $(document).ready(function(){
+                                                $("form[name=register]").prepend("<input type=\"hidden\" name=\"url_link\" id=\"url_link\" />");
+                                                $("form[name=register] input#url_link").val($("form[name=register]").attr("action"));
+                                                $("form[name=register]").attr("action", "'. $next_url .'");
 
-                                            if($("form[name=register] button[type=submit]").length > 0){
-                                                // setTimeout(function(){ $("form[name=register] button[type=submit]").trigger("click"); }, 10000);
-                                            }
+                                                if($("form[name=register] input#s_name").length){
+                                                    setTimeout(function(){ $("form input#s_name").val("'.$customer['s_username'].'"); }, 1000);
+                                                }
+                                                if($("form[name=register] input#s_email").length){
+                                                    setTimeout(function(){ $("form input#s_email").val("'.$customer['s_email'].'"); }, 2000);
+                                                }
+                                                if($("form[name=register] input#s_password").length){
+                                                    setTimeout(function(){ $("form input#s_password").val("'.$customer['s_password'].'"); }, 3000);
+                                                }
+                                                if($("form[name=register] input#s_password2").length){
+                                                    setTimeout(function(){ $("form input#s_password2").val("'.$customer['s_password'].'"); }, 4000);
+                                                }
 
+                                                if($("form[name=register] button[type=submit]").length > 0){
+                                                    // setTimeout(function(){ $("form[name=register] button[type=submit]").trigger("click"); }, 10000);
+                                                }
+
+                                                setTimeout(function(){
+                                                    // runtime out 10seconds
+                                                    window.location = "' . $next_url . '";
+                                                }, 10000);
+                                            });
+                                        </script>';
+
+                    }
+                    else{
+                        $contents['html'] = "<html><head></head><body>This Ads site ".$site_register_url." is not possible to open private register page.</body></html>";
+
+                        $javascripts = '<script type="text/javascript">
+                                        // $(document).ready(function(){
                                             setTimeout(function(){
                                                 // runtime out 10seconds
                                                 window.location = "' . $next_url . '";
                                             }, 10000);
-                                        });
-                                    </script>';
+                                        // });
+                                        </script>';
+                    }
 
                     echo str_ireplace('</body>', $javascripts . '</body>', $contents['html']);
 
@@ -100,7 +123,7 @@
                         "CSRFToken",
                         array("s_name" => $customer['s_username'], "s_email" => $customer['s_email'], "s_password" => $customer['s_password'], "s_password2" => $customer['s_password'])
                     );
-
+                    // var_dump($sites[0]['s_default_url'], $contents);
                     $javascripts = '<script type="text/javascript">
                                         // $(document).ready(function(){
                                             setTimeout(function(){
@@ -128,19 +151,30 @@
                             array('s_customer_id', 's_site_id', 's_registered', 's_confirm'), 
                             array($customer_pk_id, $sites[0]['pk_i_id'], 'N', 'N'));
 
-                        $contents = "<html><head></head><body>This Ads site is not possible to private register.</body></html>";
+                        $contents = "<html><head></head><body>This Ads site ".$sites[0]['s_default_url']." is not possible to private register.</body></html>";
                     }
 
                     echo str_ireplace('</body>', $javascripts . '</body>', $contents);
                     exit();
                 }
-            }           
+            }
+            else if(isset($_SESSION['customer_register_ids']) && is_array($_SESSION['customer_register_ids']) && count($_SESSION['customer_register_ids']) > 0){
+                $next_url = WEB_PATH . "index.php?type=register_ads&customer=all&register_sites=".$_SESSION['customer_register_sites'];
+            }
         }
         else if($type == "confirm_ads"){
             // get verify links from email in order to confirm ads sites.
             $_SESSION['verify_links'] = array();
 
-            $customers = select_rows($pdo, $table_customer, "`pk_i_id` = '".$customer_pk_id."'");
+            if($customer_pk_id > 0){
+                $customers = select_rows($pdo, $table_customer, "`pk_i_id` = '".$customer_pk_id."'");
+            }
+            else if(isset($_SESSION['customer_confirm_ids']) && is_array($_SESSION['customer_confirm_ids']) && count($_SESSION['customer_confirm_ids']) > 0){
+                $customer_ids = $_SESSION['customer_confirm_ids'];
+                $customers = select_rows($pdo, $table_customer, "`pk_i_id` = '".$customer_ids[0]."'");
+                $_SESSION['customer_confirm_ids'] = array_slice($customer_ids, 1);
+            }
+            
             if(count($customers) > 0){
                 $customer = $customers[0];
 
@@ -263,7 +297,7 @@
                             array('s_customer_id', 's_site_id', 's_registered', 's_confirm'), 
                             array($customer_pk_id, $sites[0]['pk_i_id'], 'Y', 'N'));
 
-                        $contents = "<html><head></head><body>This Ads site is not possible to confirm once registered.</body></html>";
+                        $contents = "<html><head></head><body>This Ads site ".$url." is not possible to confirm once registered.</body></html>";
                     }
                 }
 
@@ -271,6 +305,42 @@
 
                 exit();
 
+            }
+            else if(isset($_SESSION['customer_confirm_ids']) && is_array($_SESSION['customer_confirm_ids']) && count($_SESSION['customer_confirm_ids']) > 0){
+                $next_url = WEB_PATH . "index.php?type=confirm_ads&customer=all&email_server=".$_SESSION['email_server']."&email_port=".$_SESSION['email_port']."&email_type=".$_SESSION['email_type'];
+            }
+        }
+        else if($type == "multiple_register"){
+            // multiple register
+            if(isset($_GET['checkedCustomers']) && $_GET['checkedCustomers'] != ""){
+                $sql_in_str = str_ireplace("*", ",", $_GET['checkedCustomers']);
+                $customers = select_rows($pdo, $table_customer, "`pk_i_id` IN (". $sql_in_str .")");
+                $sites = select_rows($pdo, $table_url_list, "`s_flag_enable` = 'Y'");
+                if(count($customers) > 0 && count($sites) > 0){
+                    $customer_ids = array();
+                    $site_ids = array();
+                    foreach($customers as $customer) $customer_ids[] = $customer['pk_i_id'];
+                    foreach($sites as $site) $site_ids[] = $site['pk_i_id'];
+                    $_SESSION['customer_register_ids'] = $customer_ids;
+                    $_SESSION['customer_register_sites'] = implode("*", $site_ids);
+                    $next_url = WEB_PATH . "index.php?type=register_ads&customer=all&register_sites=".$_SESSION['customer_register_sites'];
+                }
+            }
+        }
+        else if($type == "multiple_confirm"){
+            // multiple confirm
+            if(isset($_GET['checkedCustomers']) && $_GET['checkedCustomers'] != ""){
+                $sql_in_str = str_ireplace("*", ",", $_GET['checkedCustomers']);
+                $customers = select_rows($pdo, $table_customer, "`pk_i_id` IN (". $sql_in_str .")");
+                if(count($customers) > 0){
+                    $customer_ids = array();
+                    foreach($customers as $customer) $customer_ids[] = $customer['pk_i_id'];
+                    $_SESSION['customer_confirm_ids'] = $customer_ids;
+                    $_SESSION['email_server'] = $_GET['email_server'];
+                    $_SESSION['email_port'] = $_GET['email_port'];
+                    $_SESSION['email_type'] = $_GET['email_type'];
+                    $next_url = WEB_PATH . "index.php?type=confirm_ads&customer=all&email_server=".$_GET['email_server']."&email_port=".$_GET['email_port']."&email_type=".$_GET['email_type'];
+                }
             }
         }
     }

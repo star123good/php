@@ -38,16 +38,14 @@
 	define('MULTISITE', 0);
 
 	/** MySQL database name for Osclass */
-	define('DB_NAME', 'bestplum_submissions');
-	define('DB_NAME1', 'bestplum_classifieds');
+	define('DB_NAME', '');
+	define('DB_NAME1', '');
 
 	/** MySQL database username */
-	define('DB_USER', 'root');
-	// define('DB_USER', 'bestplum_matt2');
+	define('DB_USER', '');
 
 	/** MySQL database password */
 	define('DB_PASSWORD', '');
-	// define('DB_PASSWORD', 'Test90000');
 
 	/** MySQL hostname */
 	define('DB_HOST', 'localhost');
@@ -57,8 +55,7 @@
 
 	define('REL_WEB_URL', '/submissions/');
 
-	define('WEB_HOST', 'bestplumberfortlauderdale.localhost');
-	// define('WEB_HOST', 'www.bestplumberfortlauderdale.com');
+	define('WEB_HOST', 'localhost');
 	define('WEB_PATH', 'http://'.WEB_HOST.'/submissions/');
 	define('WEB_PATH1', 'http://'.WEB_HOST.'/classifieds/');
 

@@ -42,12 +42,12 @@
         $url_row = get_random_value($url_rows, "pk_i_id", $url_id_olds);
     }
     // $url_row = array( 
-    //     "pk_i_id" => 1, 
-    //     "s_web_url" => "http://www.bestplumberfortlauderdale.com/classifieds",
-    //     "s_login_url" => "http://www.bestplumberfortlauderdale.com/classifieds/user/login",
-    //     "s_default_url" => "http://www.bestplumberfortlauderdale.com/classifieds/index.php",
-    //     "s_create_url" => "http://www.bestplumberfortlauderdale.com/classifieds/item/new",
-    //     "s_register_url" => "http://www.bestplumberfortlauderdale.com/classifieds/user/register",
+    //     "pk_i_id" => 9, 
+    //     "s_web_url" => "",
+    //     "s_login_url" => "",
+    //     "s_default_url" => "",
+    //     "s_create_url" => "",
+    //     "s_register_url" => "",
     //     "s_flag_enable" => "Y"
     // );
     // var_dump($url_row);
@@ -93,7 +93,19 @@
                 "CSRFToken",
                 array("email" => $user_row['s_email'], "password" => $user_row['s_password']));
 
-            $contents = str_ireplace($url_row['s_default_url'], WEB_CORS_PATH.$url_row['s_default_url'], $contents);
+            $from_str = array($url_row['s_default_url']);
+            $to_str = array(WEB_CORS_PATH.$url_row['s_default_url']);
+            $pattern = '/' . str_replace(array('/', '.'), array('\/', '\.'), $url_row['s_web_url']) . '[^"]+\.js/m';
+            preg_match_all($pattern, $contents, $matches);
+            if(isset($matches[0]) && count($matches[0]) > 0){
+                foreach($matches[0] as $match){
+                    $from_str[] = $match;
+                    $to_str[] = str_ireplace($url_row['s_web_url'], WEB_PATH, $match);
+                }
+            }
+
+            $contents = str_ireplace($from_str, $to_str, $contents);
+            // $contents = str_ireplace($url_row['s_default_url'], WEB_CORS_PATH.$url_row['s_default_url'], $contents);
 
             // $contents = str_ireplace($url_row['s_default_url'], WEB_PATH1."index.php", $contents);
             // $contents = str_ireplace(
@@ -113,8 +125,11 @@
                 if(isset($random_submit_count) && $random_submit_count > 1){
                     $next_url = (WEB_PATH."index.php?type=edit_profile&profile=".$random_profile['pk_i_id']."&random_count=". ($random_submit_count - 1)) . $next_url;
                 }
-                else{
+                else if($submit_count > 1){
                     $next_url = WEB_PATH."index.php?type=submit_login&customer=".$customer_pk_id."&submit_count=".($submit_count-1);
+                }
+                else{
+                    $next_url = WEB_PATH."index.php?type=customer";
                 }
                 
                 $contents="<html><head></head><body>Submitting Ads onto ".$url_row['s_web_url']." is not working.<br>Because account or profile is not correct.</body></html>";
@@ -132,6 +147,7 @@
                     $profile_row['s_description'] = "\"" . substr($temp_string, 6, strlen($temp_string)-12) . "\"";
                 }
                 $next_url = WEB_PATH.'index.php?type=submit_ads&customer='.$customer_pk_id.'&submit_count='.($submit_count).((isset($random_submit_count) && $random_submit_count > 0) ? "&random_count=".$random_submit_count : "");
+                $contesnt_string = trim(get_pattern_strings($profile_row['s_description']),'"');
                 $javascripts = '<script type="text/javascript">
                                 $(document).ready(function(){
                                     function getArrayFromSelect($selectOption){
@@ -197,10 +213,17 @@
 
                                     setTimeout(function(){ $("form#item-post select#catId").val("'.$profile_row['s_category'].'").change(); }, 1000);
 
-                                    setTimeout(function(){ $("form#item-post input#titleen_US").val("'.$profile_row['s_title'].'"); }, 2000);
+                                    setTimeout(function(){ $("form#item-post input#titleen_US").val("'.get_pattern_strings($profile_row['s_title']).'"); }, 2000);
 
                                     // tinyMCE text case
-                                    setTimeout(function(){ tinyMCE.get("descriptionen_US").setContent('.$profile_row['s_description'].'); }, 3000);
+                                    setTimeout(function(){
+                                        if (typeof tinyMCE !== "undefined" && typeof tinyMCE != undefined && tinyMCE != "" && tinyMCE != null && tinyMCE.get("descriptionen_US")){
+                                            tinyMCE.get("descriptionen_US").setContent("'.$contesnt_string.'");
+                                        }
+                                        else{
+                                            $("#descriptionen_US").val("'.$contesnt_string.'").change();
+                                        }
+                                    }, 3000);
                                     // textarea case ???
 
                                     // setTimeout(function(){ $("input[name=qqfile]").val("'.$profile_row['s_image_1'].'").change(); }, 4000);
@@ -253,6 +276,9 @@
                 array("email" => $user_row['s_email'], "password" => $user_row['s_password']),
                 $params);
             // $contents = get_url($url_row['s_default_url'], $_POST, $url_row['s_default_url'])['html'];
+            if(trim($contents) == "" || substr_count($contents, "Warning") >= 3){
+                $contents="<html><head></head><body>Submitting Ads onto ".$url_row['s_web_url']." is not working.<br>Because account or profile is not correct.</body></html>";
+            }
             $keys = array(
                 's_customer_id',
                 's_profile_id',
