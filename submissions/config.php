@@ -56,8 +56,8 @@
 	define('REL_WEB_URL', '/submissions/');
 
 	define('WEB_HOST', 'localhost');
-	define('WEB_PATH', 'http://'.WEB_HOST.'/submissions/');
-	define('WEB_PATH1', 'http://'.WEB_HOST.'/classifieds/');
+	define('WEB_PATH', '');
+	define('WEB_PATH1', '');
 
 	define('WEB_CORS_PATH', 'https://cors-anywhere.herokuapp.com/');
 
@@ -73,12 +73,12 @@
 	define('MAILER_AUTH', true);
 
 
-	$table_customer = "oc_t_campaign_customer";
-	$table_profile = "oc_t_campaign_profile";
-	$table_url_list = "oc_t_campaign_url_list";
-	$table_submit = "oc_t_campaign_submit";
-	$table_admin_password = "oc_t_campaign_admin";
-	$table_register = "oc_t_campaign_register";
+	$table_customer = "";
+	$table_profile = "";
+	$table_url_list = "";
+	$table_submit = "";
+	$table_admin_password = "";
+	$table_register = "";
 
-	$table_category = "oc_t_category_description";
+	$table_category = "";
 ?>
