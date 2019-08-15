@@ -5,10 +5,10 @@
 define('MULTISITE', 0);
 
 /** MySQL database name for Osclass */
-define('DB_NAME', 'bestplum_classifieds');
+define('DB_NAME', '');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', '');
 
 /** MySQL database password */
 define('DB_PASSWORD', '');
@@ -17,8 +17,8 @@ define('DB_PASSWORD', '');
 define('DB_HOST', 'localhost');
 
 /** Database Table prefix */
-define('DB_TABLE_PREFIX', 'oc_');
+define('DB_TABLE_PREFIX', '');
 
-define('REL_WEB_URL', '/classifieds/');
+define('REL_WEB_URL', '/');
 
-define('WEB_PATH', 'http://bestplumberfortlauderdale.localhost/classifieds/');
+define('WEB_PATH', '');
